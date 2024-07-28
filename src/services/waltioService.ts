@@ -54,31 +54,49 @@ export default class WaltioService {
    * @returns Compute the new token quantity in a wallet after a deposit
    */
   private static computeDeposit(wallet: Wallet, tx: TransactionFromWaltio) {
+    function isBuyTransaction(tx: TransactionFromWaltio): boolean {
+      return (
+        tx.type === "Échange" ||
+        (tx.type === "Dépôt" && tx.label === "Achat de crypto")
+      );
+    }
+
     let w = { ...wallet };
     const token = tx.tokenReceived;
     const amount = tx.amountReceived;
     const price = tx.priceTokenReceived;
+    const isBuyTx = isBuyTransaction(tx);
     if (token && amount && price) {
       const current = w[token];
       w[token] =
         typeof current === "undefined"
           ? {
               quantity: amount,
-              quantityDeposit: amount,
-              quantityWithdrawal: 0,
-              priceDeposit: [{ price: price, quantity: amount }],
-              priceWithdrawal: [],
-              avgPriceDeposit: 0,
-              avgPriceWithdrawal: 0,
+              quantityBuy: isBuyTx ? amount : 0,
+              quantitySell: 0,
+              priceBuy: isBuyTx
+                ? [{ price: price, quantity: amount, date: tx.date }]
+                : [],
+              priceSell: [],
+              avgPriceBuy: 0,
+              avgPriceSell: 0,
+              sumPriceBuy: 0,
+              sumPriceSell: 0,
+              breakevenPrice: 0,
             }
           : {
               ...current,
               quantity: current.quantity + amount,
-              quantityDeposit: current.quantityDeposit + amount,
-              priceDeposit: current.priceDeposit.concat({
-                price: price,
-                quantity: amount,
-              }),
+              quantityBuy: isBuyTx
+                ? current.quantityBuy + amount
+                : current.quantityBuy,
+              priceBuy: isBuyTx
+                ? current.priceBuy.concat({
+                    price: price,
+                    quantity: amount,
+                    date: tx.date,
+                  })
+                : current.priceBuy,
             };
     }
     return w;
@@ -91,56 +109,79 @@ export default class WaltioService {
    * @returns Compute the new token quantity in a wallet after a withdra
    */
   private static computeWithdrawal(wallet: Wallet, tx: TransactionFromWaltio) {
+    function isSellTransaction(tx: TransactionFromWaltio): boolean {
+      return tx.type === "Échange";
+    }
+
     let w = { ...wallet };
     const token = tx.tokenSent;
     const amount = tx.amountSent;
     const price = tx.priceTokenSent;
+    const isSellTx = isSellTransaction(tx);
     if (token && amount && price) {
       const current = w[token];
-      // w[token] = typeof current === "undefined" ? 0 - amount : current - amount;
       w[token] =
         typeof current === "undefined"
           ? {
               quantity: 0 - amount,
-              quantityDeposit: 0,
-              quantityWithdrawal: 0 + amount,
-              priceDeposit: [],
-              priceWithdrawal: [{ price, quantity: amount }],
-              avgPriceDeposit: 0,
-              avgPriceWithdrawal: 0,
+              quantityBuy: 0,
+              quantitySell: isSellTx ? 0 + amount : 0,
+              priceBuy: [],
+              priceSell: isSellTx
+                ? [{ price, quantity: amount, date: tx.date }]
+                : [],
+              avgPriceBuy: 0,
+              avgPriceSell: 0,
+              sumPriceBuy: 0,
+              sumPriceSell: 0,
+              breakevenPrice: 0,
             }
           : {
               ...current,
               quantity: current.quantity - amount,
-              quantityWithdrawal: current.quantityWithdrawal + amount,
-              priceWithdrawal: current.priceWithdrawal.concat({
-                price,
-                quantity: amount,
-              }),
+              quantitySell: isSellTx
+                ? current.quantitySell + amount
+                : current.quantitySell,
+              priceSell: isSellTx
+                ? current.priceSell.concat({
+                    price,
+                    quantity: amount,
+                    date: tx.date,
+                  })
+                : current.priceSell,
             };
     }
     return w;
   }
 
-  private static computeAvgPrices(wallet: Wallet) {
+  private static computePrices(wallet: Wallet) {
     let w = { ...wallet };
     Object.keys(w).forEach((token) => {
       let tokenEntry = w[token];
       if (!tokenEntry) return;
-      function computeAvg(p: PriceAction[]) {
-        if (!p.length) {
-          return 0;
-        }
+      function compute(p: PriceAction[]) {
         let totalQuantity = 0;
         let totalPrice = 0;
         p.forEach((action) => {
           totalQuantity += action.quantity;
           totalPrice += action.price * action.quantity;
         });
-        return totalQuantity ? totalPrice / totalQuantity : 0;
+        return {
+          avg: totalQuantity ? totalPrice / totalQuantity : 0,
+          sum: totalPrice,
+        };
       }
-      tokenEntry.avgPriceDeposit = computeAvg(tokenEntry.priceDeposit);
-      tokenEntry.avgPriceWithdrawal = computeAvg(tokenEntry.priceWithdrawal);
+      const pBuy = compute(tokenEntry.priceBuy);
+      tokenEntry.avgPriceBuy = pBuy.avg;
+      tokenEntry.sumPriceBuy = pBuy.sum;
+      const pSell = compute(tokenEntry.priceSell);
+      tokenEntry.avgPriceSell = pSell.avg;
+      tokenEntry.sumPriceSell = pSell.sum;
+      tokenEntry.breakevenPrice = Math.max(
+        (tokenEntry.sumPriceBuy - tokenEntry.sumPriceSell) /
+          tokenEntry.quantity,
+        0
+      );
       w[token] = tokenEntry;
     });
     return w;
@@ -168,7 +209,7 @@ export default class WaltioService {
           break;
       }
     });
-    wallet = this.computeAvgPrices(wallet);
+    wallet = this.computePrices(wallet);
     console.log("[WALTIO] Get Wallet: done");
     return wallet;
   }

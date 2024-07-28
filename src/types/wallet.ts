@@ -1,19 +1,21 @@
 export type PriceAction = {
-  [label: string]: {
-    quantity: number;
-    price: number;
-  }[];
+  quantity: number;
+  price: number;
+  date: string;
 };
 
 export type Wallet = {
   [key: string]: {
     quantity: number;
-    quantityDeposit: number;
-    quantityWithdrawal: number;
-    avgPriceDeposit: number;
-    avgPriceWithdrawal: number;
-    priceDeposit: PriceAction;
-    priceWithdrawal: PriceAction;
+    quantityBuy: number;
+    quantitySell: number;
+    priceBuy: PriceAction[];
+    priceSell: PriceAction[];
+    avgPriceBuy: number;
+    avgPriceSell: number;
+    sumPriceBuy: number;
+    sumPriceSell: number;
+    breakevenPrice: number;
   };
 };
 
