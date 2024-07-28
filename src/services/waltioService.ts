@@ -75,7 +75,16 @@ export default class WaltioService {
               quantityBuy: isBuyTx ? amount : 0,
               quantitySell: 0,
               priceBuy: isBuyTx
-                ? [{ price: price, quantity: amount, date: tx.date }]
+                ? [
+                    {
+                      price: price,
+                      quantity: amount,
+                      date: tx.date,
+                      description: tx.description,
+                      platform: tx.platform,
+                      type: tx.type,
+                    },
+                  ]
                 : [],
               priceSell: [],
               avgPriceBuy: 0,
@@ -95,6 +104,9 @@ export default class WaltioService {
                     price: price,
                     quantity: amount,
                     date: tx.date,
+                    description: tx.description,
+                    platform: tx.platform,
+                    type: tx.type,
                   })
                 : current.priceBuy,
             };
@@ -128,7 +140,16 @@ export default class WaltioService {
               quantitySell: isSellTx ? 0 + amount : 0,
               priceBuy: [],
               priceSell: isSellTx
-                ? [{ price, quantity: amount, date: tx.date }]
+                ? [
+                    {
+                      price,
+                      quantity: amount,
+                      date: tx.date,
+                      description: tx.description,
+                      platform: tx.platform,
+                      type: tx.type,
+                    },
+                  ]
                 : [],
               avgPriceBuy: 0,
               avgPriceSell: 0,
@@ -147,6 +168,9 @@ export default class WaltioService {
                     price,
                     quantity: amount,
                     date: tx.date,
+                    description: tx.description,
+                    platform: tx.platform,
+                    type: tx.type,
                   })
                 : current.priceSell,
             };

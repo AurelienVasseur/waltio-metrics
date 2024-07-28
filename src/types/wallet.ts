@@ -2,6 +2,9 @@ export type PriceAction = {
   quantity: number;
   price: number;
   date: string;
+  platform: string;
+  description: string;
+  type: "Échange" | "Dépôt" | "Retrait";
 };
 
 export type Wallet = {
