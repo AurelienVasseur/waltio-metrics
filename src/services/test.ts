@@ -4,6 +4,7 @@ type TokenData = {
   quantity: number;
   totalInvestedFiat: number;
   totalInvested: number;
+  totalSell: number;
 };
 
 type Result = {
@@ -60,6 +61,7 @@ function initializeTokenData(
       quantity: 0,
       totalInvestedFiat: 0,
       totalInvested: 0,
+      totalSell: 0,
     };
   }
 }
@@ -93,6 +95,35 @@ function updateInvestmentData(
       const fiatValueReceived = amountReceived * priceTokenReceived;
       tokenData.totalInvestedFiat += fiatValueReceived;
     }
+  }
+}
+
+/**
+ * Updates the token data with the sell information.
+ * @param transaction - A transaction from Waltio.
+ * @param tokens - An object containing the data for each token.
+ */
+function updateSellData(
+  transaction: TransactionFromWaltio,
+  tokens: Record<string, TokenData>
+): void {
+  if (
+    transaction.type === "Échange" &&
+    transaction.amountSent &&
+    transaction.priceTokenSent &&
+    transaction.tokenSent
+  ) {
+    const tokenSent = transaction.tokenSent;
+    const amountSent = transaction.amountSent;
+    const priceTokenSent = transaction.priceTokenSent;
+
+    // Calculate fiat value of the sent amount
+    const totalValueSent = amountSent * priceTokenSent;
+
+    initializeTokenData(tokens, tokenSent);
+
+    const tokenData = tokens[tokenSent]!;
+    tokenData.totalSell += totalValueSent; // Mise à jour de totalSell
   }
 }
 
@@ -164,6 +195,11 @@ function parseTransactions(transactions: TransactionFromWaltio[]): Result {
     if (isRelevantInvestment) {
       updateInvestmentData(transaction, tokens);
     }
+
+    if (transaction.type === "Échange") {
+      updateSellData(transaction, tokens);
+    }
+
     updateQuantityData(transaction, tokens);
     updateFeesData(transaction, totalFees);
   });
