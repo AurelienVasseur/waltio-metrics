@@ -6,6 +6,7 @@ type TokenData = {
   cashOut: number;
   totalBuy: number;
   totalSell: number;
+  pnlRealized: number;
 };
 
 type Result = {
@@ -67,6 +68,7 @@ function initializeTokenData(
       cashOut: 0,
       totalBuy: 0,
       totalSell: 0,
+      pnlRealized: 0,
     };
   }
 }
@@ -95,10 +97,10 @@ function updateInvestmentData(
     initializeTokenData(tokens, tokenReceived);
 
     const tokenData = tokens[tokenReceived]!;
-    tokenData.totalBuy += totalValueReceived; // Mise à jour de totalBuy
+    tokenData.totalBuy += totalValueReceived; // Update totalBuy
     if (isFiatInvestmentTransaction(transaction)) {
       const fiatValueReceived = amountReceived * priceTokenReceived;
-      tokenData.cashIn += fiatValueReceived; // Mise à jour de cashIn
+      tokenData.cashIn += fiatValueReceived; // Update cashIn
     }
   }
 }
@@ -128,7 +130,7 @@ function updateSellData(
     initializeTokenData(tokens, tokenSent);
 
     const tokenData = tokens[tokenSent]!;
-    tokenData.totalSell += totalValueSent; // Mise à jour de totalSell
+    tokenData.totalSell += totalValueSent; // Update totalSell
   }
 }
 
@@ -161,7 +163,7 @@ function updateCashOutData(
     initializeTokenData(tokens, tokenSent);
 
     const tokenData = tokens[tokenSent]!;
-    tokenData.cashOut += totalValueSent; // Mise à jour de cashOut
+    tokenData.cashOut += totalValueSent; // Update cashOut
   }
 }
 
@@ -244,17 +246,22 @@ function parseTransactions(transactions: TransactionFromWaltio[]): Result {
     updateFeesData(transaction, totalFees);
   });
 
-  // Calculer totalInvestedFiat (cashIn) comme la somme des cashIn de tous les tokens
+  // Calculate totalInvestedFiat (cashIn) as the sum of cashIn of all tokens
   totalInvestedFiat = Object.values(tokens).reduce(
     (sum, tokenData) => sum + tokenData.cashIn,
     0
   );
 
-  // Calculer totalCashOut comme la somme des cashOut de tous les tokens
+  // Calculate totalCashOut as the sum of cashOut of all tokens
   totalCashOut = Object.values(tokens).reduce(
     (sum, tokenData) => sum + tokenData.cashOut,
     0
   );
+
+  // Calculate pnlRealized for each token
+  Object.values(tokens).forEach((tokenData) => {
+    tokenData.pnlRealized = tokenData.totalSell - tokenData.totalBuy;
+  });
 
   return {
     overview: {
