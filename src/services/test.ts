@@ -2,14 +2,16 @@ import { TransactionFromWaltio } from "../types/transactionFromWaltio";
 
 type TokenData = {
   quantity: number;
-  totalInvestedFiat: number;
-  totalInvested: number;
+  cashIn: number;
+  totalBuy: number;
   totalSell: number;
 };
 
 type Result = {
-  totalInvestedFiat: number;
-  totalFees: number;
+  overview: {
+    cashIn: number;
+    fees: number;
+  };
   tokens: {
     [token: string]: TokenData;
   };
@@ -59,8 +61,8 @@ function initializeTokenData(
   if (!tokens[token]) {
     tokens[token] = {
       quantity: 0,
-      totalInvestedFiat: 0,
-      totalInvested: 0,
+      cashIn: 0,
+      totalBuy: 0,
       totalSell: 0,
     };
   }
@@ -90,10 +92,10 @@ function updateInvestmentData(
     initializeTokenData(tokens, tokenReceived);
 
     const tokenData = tokens[tokenReceived]!;
-    tokenData.totalInvested += totalValueReceived; // Mise à jour de totalInvested
+    tokenData.totalBuy += totalValueReceived; // Mise à jour de totalBuy
     if (isFiatInvestmentTransaction(transaction)) {
       const fiatValueReceived = amountReceived * priceTokenReceived;
-      tokenData.totalInvestedFiat += fiatValueReceived;
+      tokenData.cashIn += fiatValueReceived; // Mise à jour de cashIn
     }
   }
 }
@@ -204,15 +206,17 @@ function parseTransactions(transactions: TransactionFromWaltio[]): Result {
     updateFeesData(transaction, totalFees);
   });
 
-  // Calculer totalInvestedFiat comme la somme des totalInvestedFiat de tous les tokens
+  // Calculer totalInvestedFiat (cashIn) comme la somme des cashIn de tous les tokens
   totalInvestedFiat = Object.values(tokens).reduce(
-    (sum, tokenData) => sum + tokenData.totalInvestedFiat,
+    (sum, tokenData) => sum + tokenData.cashIn,
     0
   );
 
   return {
-    totalInvestedFiat,
-    totalFees: totalFees.value,
+    overview: {
+      cashIn: totalInvestedFiat,
+      fees: totalFees.value,
+    },
     tokens,
   };
 }
