@@ -3,6 +3,7 @@ import { TransactionFromWaltio } from "../types/transactionFromWaltio";
 type TokenData = {
   quantity: number;
   cashIn: number;
+  cashOut: number;
   totalBuy: number;
   totalSell: number;
 };
@@ -10,6 +11,7 @@ type TokenData = {
 type Result = {
   overview: {
     cashIn: number;
+    cashOut: number;
     fees: number;
   };
   tokens: {
@@ -62,6 +64,7 @@ function initializeTokenData(
     tokens[token] = {
       quantity: 0,
       cashIn: 0,
+      cashOut: 0,
       totalBuy: 0,
       totalSell: 0,
     };
@@ -130,6 +133,39 @@ function updateSellData(
 }
 
 /**
+ * Updates the token data with the cash out information.
+ * @param transaction - A transaction from Waltio.
+ * @param tokens - An object containing the data for each token.
+ */
+function updateCashOutData(
+  transaction: TransactionFromWaltio,
+  tokens: Record<string, TokenData>
+): void {
+  if (
+    transaction.type === "Échange" &&
+    transaction.amountReceived &&
+    transaction.priceTokenReceived &&
+    transaction.tokenReceived &&
+    transaction.tokenSent &&
+    transaction.amountSent &&
+    transaction.priceTokenSent &&
+    fiatTokens.includes(transaction.tokenReceived)
+  ) {
+    const tokenSent = transaction.tokenSent;
+    const amountSent = transaction.amountSent;
+    const priceTokenSent = transaction.priceTokenSent;
+
+    // Calculate fiat value of the sent amount
+    const totalValueSent = amountSent * priceTokenSent;
+
+    initializeTokenData(tokens, tokenSent);
+
+    const tokenData = tokens[tokenSent]!;
+    tokenData.cashOut += totalValueSent; // Mise à jour de cashOut
+  }
+}
+
+/**
  * Updates the token data with the fees information.
  * @param transaction - A transaction from Waltio.
  * @param totalFees - A reference to the total fees.
@@ -181,6 +217,7 @@ function parseTransactions(transactions: TransactionFromWaltio[]): Result {
   const tokens: Record<string, TokenData> = {};
   let totalInvestedFiat = 0;
   let totalFees = { value: 0 };
+  let totalCashOut = 0;
 
   transactions.forEach((transaction) => {
     const isFiatInvestment = isFiatInvestmentTransaction(transaction);
@@ -200,6 +237,7 @@ function parseTransactions(transactions: TransactionFromWaltio[]): Result {
 
     if (transaction.type === "Échange") {
       updateSellData(transaction, tokens);
+      updateCashOutData(transaction, tokens);
     }
 
     updateQuantityData(transaction, tokens);
@@ -212,9 +250,16 @@ function parseTransactions(transactions: TransactionFromWaltio[]): Result {
     0
   );
 
+  // Calculer totalCashOut comme la somme des cashOut de tous les tokens
+  totalCashOut = Object.values(tokens).reduce(
+    (sum, tokenData) => sum + tokenData.cashOut,
+    0
+  );
+
   return {
     overview: {
       cashIn: totalInvestedFiat,
+      cashOut: totalCashOut,
       fees: totalFees.value,
     },
     tokens,
