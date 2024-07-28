@@ -1,28 +1,27 @@
 import { TransactionFromWaltio } from "../types/transactionFromWaltio";
 
-type InvestmentSummary = {
+type TokenData = {
+  quantity: number;
   totalInvestedFiat: number;
-  totalInvestedByAsset: Record<string, number>;
-  totalInvestedByToken: Record<string, number>;
-  totalSoldByToken: Record<string, number>;
-  unitCostByAsset: Record<string, number>;
-  totalFees: number;
-  quantityByToken: Record<string, number>;
+  totalInvested: number;
 };
 
-type AssetData = {
+type Result = {
   totalInvestedFiat: number;
-  totalAmountReceived: number;
+  totalFees: number;
+  tokens: {
+    [token: string]: TokenData;
+  };
 };
 
 const fiatTokens = ["USD", "EUR"];
 
 /**
- * Checks if a transaction is relevant for investment calculations.
+ * Checks if a transaction is relevant for fiat investment calculations.
  * @param transaction - A transaction from Waltio.
- * @returns True if the transaction is an exchange involving USD/EUR or a deposit with the label "Achat de crypto".
+ * @returns True if the transaction is a deposit with the label "Achat de crypto" or an exchange involving USD/EUR as the sent token.
  */
-function isRelevantFiatTransaction(
+function isFiatInvestmentTransaction(
   transaction: TransactionFromWaltio
 ): boolean {
   return (
@@ -36,9 +35,11 @@ function isRelevantFiatTransaction(
 /**
  * Checks if a transaction is relevant for total investment calculations.
  * @param transaction - A transaction from Waltio.
- * @returns True if the transaction is an exchange or a deposit with the label "Achat de crypto".
+ * @returns True if the transaction is a deposit with the label "Achat de crypto" or an exchange.
  */
-function isRelevantTransaction(transaction: TransactionFromWaltio): boolean {
+function isRelevantInvestmentTransaction(
+  transaction: TransactionFromWaltio
+): boolean {
   return (
     transaction.type === "Échange" ||
     (transaction.type === "Dépôt" && transaction.label === "Achat de crypto")
@@ -46,217 +47,137 @@ function isRelevantTransaction(transaction: TransactionFromWaltio): boolean {
 }
 
 /**
- * Calculates the investment for a given transaction and updates totalInvestedByAsset.
- * @param transaction - A transaction from Waltio.
- * @param totalInvestedByAsset - An object containing the total investments by asset.
- * @returns The total fiat amount invested for this transaction.
+ * Initializes token data if it does not exist.
+ * @param tokens - An object containing the data for each token.
+ * @param token - The token to initialize.
  */
-function calculateInvestment(
+function initializeTokenData(
+  tokens: Record<string, TokenData>,
+  token: string
+): void {
+  if (!tokens[token]) {
+    tokens[token] = {
+      quantity: 0,
+      totalInvestedFiat: 0,
+      totalInvested: 0,
+    };
+  }
+}
+
+/**
+ * Updates the token data with the investment information.
+ * @param transaction - A transaction from Waltio.
+ * @param tokens - An object containing the data for each token.
+ */
+function updateInvestmentData(
   transaction: TransactionFromWaltio,
-  totalInvestedByAsset: Record<string, AssetData>
-): number {
-  if (transaction.amountReceived && transaction.priceTokenReceived) {
-    const tokenReceived = transaction.tokenReceived!;
-    const amountReceived = transaction.amountReceived!;
-    const priceTokenReceived = transaction.priceTokenReceived!;
+  tokens: Record<string, TokenData>
+): void {
+  if (
+    transaction.amountReceived &&
+    transaction.priceTokenReceived &&
+    transaction.tokenReceived
+  ) {
+    const tokenReceived = transaction.tokenReceived;
+    const amountReceived = transaction.amountReceived;
+    const priceTokenReceived = transaction.priceTokenReceived;
 
     // Calculate fiat value of the received amount
-    const fiatValueReceived = amountReceived * priceTokenReceived;
+    const totalValueReceived = amountReceived * priceTokenReceived;
 
-    if (!totalInvestedByAsset[tokenReceived]) {
-      totalInvestedByAsset[tokenReceived] = {
-        totalInvestedFiat: 0,
-        totalAmountReceived: 0,
-      };
+    initializeTokenData(tokens, tokenReceived);
+
+    const tokenData = tokens[tokenReceived]!;
+    tokenData.totalInvested += totalValueReceived; // Mise à jour de totalInvested
+    if (isFiatInvestmentTransaction(transaction)) {
+      const fiatValueReceived = amountReceived * priceTokenReceived;
+      tokenData.totalInvestedFiat += fiatValueReceived;
     }
-
-    const assetData = totalInvestedByAsset[tokenReceived];
-    if (assetData) {
-      assetData.totalInvestedFiat += fiatValueReceived;
-      assetData.totalAmountReceived += amountReceived;
-    }
-
-    return fiatValueReceived;
   }
-  return 0;
 }
 
 /**
- * Calculates the total investment for a given transaction and updates totalInvestedByToken.
+ * Updates the token data with the fees information.
  * @param transaction - A transaction from Waltio.
- * @param totalInvestedByToken - An object containing the total investments by token.
- * @returns The total amount invested for this transaction.
+ * @param totalFees - A reference to the total fees.
  */
-function calculateTotalInvestment(
+function updateFeesData(
   transaction: TransactionFromWaltio,
-  totalInvestedByToken: Record<string, number>
-): number {
-  if (transaction.amountReceived && transaction.priceTokenReceived) {
-    const tokenReceived = transaction.tokenReceived!;
-    const amountReceived = transaction.amountReceived!;
-    const priceTokenReceived = transaction.priceTokenReceived!;
-
-    // Calculate value of the received amount
-    const valueReceived = amountReceived * priceTokenReceived;
-
-    if (!totalInvestedByToken[tokenReceived]) {
-      totalInvestedByToken[tokenReceived] = 0;
-    }
-
-    totalInvestedByToken[tokenReceived] += valueReceived;
-
-    return valueReceived;
-  }
-  return 0;
-}
-
-/**
- * Calculates the total amount sold for a given transaction and updates totalSoldByToken.
- * @param transaction - A transaction from Waltio.
- * @param totalSoldByToken - An object containing the total amount sold by token.
- * @returns The total amount sold for this transaction.
- */
-function calculateTotalSold(
-  transaction: TransactionFromWaltio,
-  totalSoldByToken: Record<string, number>
-): number {
-  if (
-    transaction.type === "Échange" &&
-    transaction.amountSent &&
-    transaction.priceTokenSent
-  ) {
-    const tokenSent = transaction.tokenSent!;
-    const amountSent = transaction.amountSent!;
-    const priceTokenSent = transaction.priceTokenSent!;
-
-    // Calculate value of the sent amount
-    const valueSent = amountSent * priceTokenSent;
-
-    if (!totalSoldByToken[tokenSent]) {
-      totalSoldByToken[tokenSent] = 0;
-    }
-
-    totalSoldByToken[tokenSent] += valueSent;
-
-    return valueSent;
-  }
-  return 0;
-}
-
-/**
- * Updates the quantity of tokens held based on the transaction.
- * @param transaction - A transaction from Waltio.
- * @param quantityByToken - An object containing the quantity held for each token.
- */
-function updateQuantityByToken(
-  transaction: TransactionFromWaltio,
-  quantityByToken: Record<string, number>
+  totalFees: { value: number }
 ): void {
-  if (transaction.amountReceived) {
-    const tokenReceived = transaction.tokenReceived!;
-    const amountReceived = transaction.amountReceived!;
-
-    if (!quantityByToken[tokenReceived]) {
-      quantityByToken[tokenReceived] = 0;
-    }
-
-    quantityByToken[tokenReceived] += amountReceived;
-  }
-
-  if (transaction.amountSent) {
-    const tokenSent = transaction.tokenSent!;
-    const amountSent = transaction.amountSent!;
-
-    if (!quantityByToken[tokenSent]) {
-      quantityByToken[tokenSent] = 0;
-    }
-
-    quantityByToken[tokenSent] -= amountSent;
-  }
-}
-
-/**
- * Calculates the fees for a given transaction.
- * @param transaction - A transaction from Waltio.
- * @returns The total fees amount for this transaction.
- */
-function calculateFees(transaction: TransactionFromWaltio): number {
   if (transaction.fees && transaction.priceTokenFees) {
-    return transaction.fees * transaction.priceTokenFees;
+    const feeValue = transaction.fees * transaction.priceTokenFees;
+    totalFees.value += feeValue;
   }
-  return 0;
 }
 
 /**
- * Calculates the unit cost for each asset.
- * @param totalInvestedByAsset - An object containing the total investments by asset.
- * @returns An object containing the unit cost for each asset.
+ * Updates the token data with the quantity information.
+ * @param transaction - A transaction from Waltio.
+ * @param tokens - An object containing the data for each token.
  */
-function calculateUnitCostByAsset(
-  totalInvestedByAsset: Record<string, AssetData>
-): Record<string, number> {
-  const unitCostByAsset: Record<string, number> = {};
+function updateQuantityData(
+  transaction: TransactionFromWaltio,
+  tokens: Record<string, TokenData>
+): void {
+  if (transaction.amountReceived && transaction.tokenReceived) {
+    const tokenReceived = transaction.tokenReceived;
+    const amountReceived = transaction.amountReceived;
 
-  for (const token in totalInvestedByAsset) {
-    const assetData = totalInvestedByAsset[token];
-    if (assetData) {
-      const { totalInvestedFiat, totalAmountReceived } = assetData;
-      unitCostByAsset[token] = totalInvestedFiat / totalAmountReceived;
-    }
+    initializeTokenData(tokens, tokenReceived);
+
+    tokens[tokenReceived]!.quantity += amountReceived;
   }
 
-  return unitCostByAsset;
+  if (transaction.amountSent && transaction.tokenSent) {
+    const tokenSent = transaction.tokenSent;
+    const amountSent = transaction.amountSent;
+
+    initializeTokenData(tokens, tokenSent);
+
+    tokens[tokenSent]!.quantity -= amountSent;
+  }
 }
 
 /**
  * Parses a list of transactions to generate an investment summary.
  * @param transactions - An array of transactions from Waltio.
- * @returns An investment summary including total fiat invested, total invested by asset, total invested by token, total sold by token, unit cost by asset, total fees, and quantity by token.
+ * @returns An investment summary including total fiat invested, total fees, and token data.
  */
-function parseTransactions(
-  transactions: TransactionFromWaltio[]
-): InvestmentSummary {
-  const totalInvestedByAsset: Record<string, AssetData> = {};
-  const totalInvestedByToken: Record<string, number> = {};
-  const totalSoldByToken: Record<string, number> = {};
-  const quantityByToken: Record<string, number> = {};
+function parseTransactions(transactions: TransactionFromWaltio[]): Result {
+  const tokens: Record<string, TokenData> = {};
   let totalInvestedFiat = 0;
-  let totalFees = 0;
+  let totalFees = { value: 0 };
 
   transactions.forEach((transaction) => {
-    if (isRelevantFiatTransaction(transaction)) {
-      totalInvestedFiat += calculateInvestment(
-        transaction,
-        totalInvestedByAsset
-      );
+    const isFiatInvestment = isFiatInvestmentTransaction(transaction);
+    const isRelevantInvestment = isRelevantInvestmentTransaction(transaction);
+
+    if (
+      isFiatInvestment &&
+      transaction.amountSent &&
+      transaction.priceTokenSent
+    ) {
+      totalInvestedFiat += transaction.amountSent * transaction.priceTokenSent;
     }
-    if (isRelevantTransaction(transaction)) {
-      calculateTotalInvestment(transaction, totalInvestedByToken);
+
+    if (isRelevantInvestment) {
+      updateInvestmentData(transaction, tokens);
     }
-    if (transaction.type === "Échange") {
-      calculateTotalSold(transaction, totalSoldByToken);
-    }
-    updateQuantityByToken(transaction, quantityByToken);
-    totalFees += calculateFees(transaction);
+    updateQuantityData(transaction, tokens);
+    updateFeesData(transaction, totalFees);
   });
+
+  // Calculer totalInvestedFiat comme la somme des totalInvestedFiat de tous les tokens
+  totalInvestedFiat = Object.values(tokens).reduce(
+    (sum, tokenData) => sum + tokenData.totalInvestedFiat,
+    0
+  );
 
   return {
     totalInvestedFiat,
-    totalInvestedByAsset: Object.keys(totalInvestedByAsset).reduce(
-      (acc, token) => {
-        const assetData = totalInvestedByAsset[token];
-        if (assetData) {
-          acc[token] = assetData.totalInvestedFiat;
-        }
-        return acc;
-      },
-      {} as Record<string, number>
-    ),
-    totalInvestedByToken,
-    totalSoldByToken,
-    unitCostByAsset: calculateUnitCostByAsset(totalInvestedByAsset),
-    totalFees,
-    quantityByToken,
+    totalFees: totalFees.value,
+    tokens,
   };
 }
 
