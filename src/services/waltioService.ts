@@ -2,7 +2,7 @@ import {
   TransactionFromWaltio,
   TransactionFromWaltioZod,
 } from "../types/transactionFromWaltio";
-import { Platforms, PriceAction, Wallet } from "../types/wallet";
+import { Overview, Platforms, PriceAction, Wallet } from "../types/wallet";
 import { getRowsFromExcelFile, getCellValue } from "../utils/excelUtils";
 
 export default class WaltioService {
@@ -83,6 +83,7 @@ export default class WaltioService {
                       description: tx.description,
                       platform: tx.platform,
                       type: tx.type,
+                      label: tx.label,
                     },
                   ]
                 : [],
@@ -107,6 +108,7 @@ export default class WaltioService {
                     description: tx.description,
                     platform: tx.platform,
                     type: tx.type,
+                    label: tx.label,
                   })
                 : current.priceBuy,
             };
@@ -148,6 +150,7 @@ export default class WaltioService {
                       description: tx.description,
                       platform: tx.platform,
                       type: tx.type,
+                      label: tx.label,
                     },
                   ]
                 : [],
@@ -171,6 +174,7 @@ export default class WaltioService {
                     description: tx.description,
                     platform: tx.platform,
                     type: tx.type,
+                    label: tx.label,
                   })
                 : current.priceSell,
             };
@@ -264,5 +268,34 @@ export default class WaltioService {
     });
     console.log("[WALTIO] Get Platforms: done");
     return platforms;
+  }
+
+  /**
+   *
+   * @param transactions
+   * @returns Investment overview
+   */
+  static getOverview(transactions: TransactionFromWaltio[]) {
+    console.log("[WALTIO] Get Overview: start");
+    let totalInvested = 0;
+    transactions.forEach((tx) => {
+      const fees =
+        tx.fees && tx.priceTokenFees ? tx.fees * tx.priceTokenFees : 0;
+      if (tx.type === "Dépôt" && tx.label === "Achat de crypto") {
+        // Case 1: Buy via an external provider (Ramp, etc.)
+        if (!tx.amountReceived || !tx.priceTokenReceived) return;
+        totalInvested += tx.amountReceived * tx.priceTokenReceived + fees;
+      } else if (
+        tx.type === "Échange" &&
+        ["EUR", "USD"].includes(tx.tokenSent || "")
+      ) {
+        // Case 2: Swap FIAT to crypto
+        if (!tx.amountSent || !tx.priceTokenSent) return;
+        totalInvested += tx.amountSent * tx.priceTokenSent + fees;
+      }
+    });
+    const overview: Overview = { totalInvested };
+    console.log("[WALTIO] Get Overview: done");
+    return overview;
   }
 }

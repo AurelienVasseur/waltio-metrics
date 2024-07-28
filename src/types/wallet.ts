@@ -4,6 +4,7 @@ export type PriceAction = {
   date: string;
   platform: string;
   description: string;
+  label: string;
   type: "Échange" | "Dépôt" | "Retrait";
 };
 
@@ -25,3 +26,7 @@ export type Wallet = {
 export type Platforms = {
   [key: string]: Wallet;
 };
+
+export type Overview = {
+  totalInvested: number;
+}

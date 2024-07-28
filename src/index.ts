@@ -8,8 +8,10 @@ const main = async () => {
   const transactions = await WaltioService.getTransactions(FILE_PATH);
   const wallet = WaltioService.getWallet(transactions);
   const platforms = WaltioService.getPlatforms(transactions);
+  const overview = WaltioService.getOverview(transactions);
   saveJson(wallet, "wallet");
   saveJson(platforms, "platforms");
+  saveJson(overview, "overview");
 };
 
 main().then();
