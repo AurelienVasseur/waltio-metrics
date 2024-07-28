@@ -277,24 +277,40 @@ export default class WaltioService {
    */
   static getOverview(transactions: TransactionFromWaltio[]) {
     console.log("[WALTIO] Get Overview: start");
-    let totalInvested = 0;
+    let overview: Overview = {};
     transactions.forEach((tx) => {
-      const fees =
-        tx.fees && tx.priceTokenFees ? tx.fees * tx.priceTokenFees : 0;
-      if (tx.type === "Dépôt" && tx.label === "Achat de crypto") {
-        // Case 1: Buy via an external provider (Ramp, etc.)
-        if (!tx.amountReceived || !tx.priceTokenReceived) return;
-        totalInvested += tx.amountReceived * tx.priceTokenReceived + fees;
-      } else if (
-        tx.type === "Échange" &&
-        ["EUR", "USD"].includes(tx.tokenSent || "")
-      ) {
-        // Case 2: Swap FIAT to crypto
-        if (!tx.amountSent || !tx.priceTokenSent) return;
-        totalInvested += tx.amountSent * tx.priceTokenSent + fees;
+      function getInvestment(tx: TransactionFromWaltio): number | null {
+        const fees =
+          tx.fees && tx.priceTokenFees ? tx.fees * tx.priceTokenFees : 0;
+        if (tx.type === "Dépôt" && tx.label === "Achat de crypto") {
+          // Case 1: Buy via an external provider (Ramp, etc.)
+          if (!tx.amountReceived || !tx.priceTokenReceived) return null;
+          return tx.amountReceived * tx.priceTokenReceived + fees;
+        } else if (
+          tx.type === "Échange" &&
+          ["EUR", "USD"].includes(tx.tokenSent || "")
+        ) {
+          // Case 2: Swap FIAT to crypto
+          if (!tx.amountSent || !tx.priceTokenSent) return null;
+          return tx.amountSent * tx.priceTokenSent + fees;
+        }
+        return null;
       }
+      const amount = getInvestment(tx);
+      const token = tx.tokenReceived;
+      if (!amount || !token) return;
+      ["_wallet", token].forEach((key) => {
+        const current = overview[key];
+        overview[key] =
+          current === undefined
+            ? {
+                totalInvested: amount,
+              }
+            : {
+                totalInvested: current.totalInvested + amount,
+              };
+      });
     });
-    const overview: Overview = { totalInvested };
     console.log("[WALTIO] Get Overview: done");
     return overview;
   }

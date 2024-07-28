@@ -28,5 +28,7 @@ export type Platforms = {
 };
 
 export type Overview = {
-  totalInvested: number;
-}
+  [key: string]: {
+    totalInvested: number; // Fresh money investment / FIAT investment
+  };
+};
