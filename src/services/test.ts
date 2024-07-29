@@ -191,6 +191,7 @@ function updateQuantityData(
   transaction: TransactionFromWaltio,
   tokens: Record<string, TokenData>
 ): void {
+  // Update quantity for received tokens
   if (transaction.amountReceived && transaction.tokenReceived) {
     const tokenReceived = transaction.tokenReceived;
     const amountReceived = transaction.amountReceived;
@@ -200,6 +201,7 @@ function updateQuantityData(
     tokens[tokenReceived]!.quantity += amountReceived;
   }
 
+  // Update quantity for sent tokens
   if (transaction.amountSent && transaction.tokenSent) {
     const tokenSent = transaction.tokenSent;
     const amountSent = transaction.amountSent;
@@ -207,6 +209,16 @@ function updateQuantityData(
     initializeTokenData(tokens, tokenSent);
 
     tokens[tokenSent]!.quantity -= amountSent;
+  }
+
+  // Update quantity for fees
+  if (transaction.fees && transaction.tokenFees) {
+    const tokenFees = transaction.tokenFees;
+    const fees = transaction.fees;
+
+    initializeTokenData(tokens, tokenFees);
+
+    tokens[tokenFees]!.quantity -= fees;
   }
 }
 
