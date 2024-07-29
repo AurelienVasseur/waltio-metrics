@@ -7,6 +7,7 @@ type TokenData = {
   totalBuy: number;
   totalSell: number;
   pnlRealized: number;
+  unitPrice: number; // Added unitPrice
 };
 
 type Result = {
@@ -69,6 +70,7 @@ function initializeTokenData(
       totalBuy: 0,
       totalSell: 0,
       pnlRealized: 0,
+      unitPrice: 0, // Initialize unitPrice
     };
   }
 }
@@ -270,9 +272,15 @@ function parseTransactions(transactions: TransactionFromWaltio[]): Result {
     0
   );
 
-  // Calculate pnlRealized for each token
+  // Calculate pnlRealized and unitPrice for each token
   Object.values(tokens).forEach((tokenData) => {
     tokenData.pnlRealized = tokenData.totalSell - tokenData.totalBuy;
+    tokenData.unitPrice =
+      tokenData.pnlRealized > 0
+        ? 0
+        : tokenData.quantity !== 0
+        ? Math.abs(tokenData.pnlRealized) / tokenData.quantity
+        : 0; // Calculate unitPrice
   });
 
   return {
