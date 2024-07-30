@@ -1,37 +1,33 @@
-import expectedQuantities from "./expectedQuantities";
 import { TransactionFromWaltio } from "./types/transactionFromWaltio";
+import expectedQuantities from "./expectedQuantities";
 
-// Define the structure for quantity data
-type QuantityData = {
-  computed: number;
-  expected: number | undefined;
-  delta: number | undefined;
-  deltaPercent: number | undefined;
-};
-
-// Define the structure for token data
-type TokenData = {
-  quantity: QuantityData;
+// Define a common type for token data and historic entries
+type TokenDataEntry = {
   cashIn: number;
   cashOut: number;
   totalBuy: number;
   totalSell: number;
   pnlRealized: number;
   unitPrice: number;
-  historic: Array<{
-    date: string;
-    totalBuy: number;
-    totalSell: number;
-    quantity: number;
-    cashIn: number;
-    cashOut: number;
-    pnlRealized: number;
-    unitPrice: number;
-    transaction: TransactionFromWaltio; // Add transaction details
-  }>;
 };
 
-// Define the structure for the result
+// Define the structure for token data, including historic entries
+type TokenData = TokenDataEntry & {
+  quantity: {
+    computed: number;
+    expected: number | undefined;
+    delta: number | undefined;
+    deltaPercent: number | undefined;
+  };
+  historic: Array<
+    TokenDataEntry & {
+      quantity: number;
+      date: string;
+      transaction: TransactionFromWaltio;
+    }
+  >;
+};
+
 type Result = {
   overview: {
     cashIn: number;
@@ -89,9 +85,9 @@ function initializeTokenData(
     tokens[token] = {
       quantity: {
         computed: 0,
-        expected: expectedQuantity,
-        delta: expectedQuantity !== undefined ? 0 : undefined,
-        deltaPercent: expectedQuantity !== undefined ? 0 : undefined,
+        expected: expectedQuantity !== undefined ? expectedQuantity : undefined,
+        delta: undefined,
+        deltaPercent: undefined,
       },
       cashIn: 0,
       cashOut: 0,
@@ -99,7 +95,7 @@ function initializeTokenData(
       totalSell: 0,
       pnlRealized: 0,
       unitPrice: 0,
-      historic: [], // Initialize historic data
+      historic: [],
     };
   }
 }
@@ -268,6 +264,7 @@ function updateQuantityData(
   date: string
 ): void {
   let quantityChanged = false;
+  const updatedTokens = new Set<string>();
 
   // Update quantity for received tokens
   if (transaction.amountReceived && transaction.tokenReceived) {
@@ -278,6 +275,7 @@ function updateQuantityData(
 
     tokens[tokenReceived]!.quantity.computed += amountReceived;
     quantityChanged = true;
+    updatedTokens.add(tokenReceived);
   }
 
   // Update quantity for sent tokens
@@ -289,6 +287,7 @@ function updateQuantityData(
 
     tokens[tokenSent]!.quantity.computed -= amountSent;
     quantityChanged = true;
+    updatedTokens.add(tokenSent);
   }
 
   // Update quantity for fees
@@ -300,35 +299,14 @@ function updateQuantityData(
 
     tokens[tokenFees]!.quantity.computed -= fees;
     quantityChanged = true;
+    updatedTokens.add(tokenFees);
   }
 
-  // Add to historic if quantity changed, ensuring no duplicate entries
+  // Add to historic if quantity changed
   if (quantityChanged) {
-    const updatedTokens = new Set<string>();
-
-    if (transaction.amountReceived && transaction.tokenReceived) {
-      const tokenReceived = transaction.tokenReceived;
-      if (!updatedTokens.has(tokenReceived)) {
-        addHistoricEntry(tokens[tokenReceived]!, date, transaction);
-        updatedTokens.add(tokenReceived);
-      }
-    }
-
-    if (transaction.amountSent && transaction.tokenSent) {
-      const tokenSent = transaction.tokenSent;
-      if (!updatedTokens.has(tokenSent)) {
-        addHistoricEntry(tokens[tokenSent]!, date, transaction);
-        updatedTokens.add(tokenSent);
-      }
-    }
-
-    if (transaction.fees && transaction.tokenFees) {
-      const tokenFees = transaction.tokenFees;
-      if (!updatedTokens.has(tokenFees)) {
-        addHistoricEntry(tokens[tokenFees]!, date, transaction);
-        updatedTokens.add(tokenFees);
-      }
-    }
+    updatedTokens.forEach((token) => {
+      addHistoricEntry(tokens[token]!, date, transaction);
+    });
   }
 }
 
