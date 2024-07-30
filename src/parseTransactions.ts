@@ -1,6 +1,7 @@
 import expectedQuantities from "./expectedQuantities";
 import { TransactionFromWaltio } from "./types/transactionFromWaltio";
 
+// Define the structure for quantity data
 type QuantityData = {
   computed: number;
   expected: number | undefined;
@@ -8,6 +9,7 @@ type QuantityData = {
   deltaPercent: number | undefined;
 };
 
+// Define the structure for token data
 type TokenData = {
   quantity: QuantityData;
   cashIn: number;
@@ -15,9 +17,16 @@ type TokenData = {
   totalBuy: number;
   totalSell: number;
   pnlRealized: number;
-  unitPrice: number; // Added unitPrice
+  unitPrice: number;
+  historic: Array<{
+    date: string;
+    totalBuy: number;
+    totalSell: number;
+    quantity: number;
+  }>;
 };
 
+// Define the structure for the result
 type Result = {
   overview: {
     cashIn: number;
@@ -84,9 +93,24 @@ function initializeTokenData(
       totalBuy: 0,
       totalSell: 0,
       pnlRealized: 0,
-      unitPrice: 0, // Initialize unitPrice
+      unitPrice: 0,
+      historic: [], // Initialize historic data
     };
   }
+}
+
+/**
+ * Adds an entry to the token's historic data.
+ * @param tokenData - The data of the token to update.
+ * @param date - The date of the transaction.
+ */
+function addHistoricEntry(tokenData: TokenData, date: string): void {
+  tokenData.historic.push({
+    date,
+    totalBuy: tokenData.totalBuy,
+    totalSell: tokenData.totalSell,
+    quantity: tokenData.quantity.computed,
+  });
 }
 
 /**
@@ -202,11 +226,15 @@ function updateFeesData(
  * Updates the token data with the quantity information.
  * @param transaction - A transaction from Waltio.
  * @param tokens - An object containing the data for each token.
+ * @param date - The date of the transaction.
  */
 function updateQuantityData(
   transaction: TransactionFromWaltio,
-  tokens: Record<string, TokenData>
+  tokens: Record<string, TokenData>,
+  date: string
 ): void {
+  let quantityChanged = false;
+
   // Update quantity for received tokens
   if (transaction.amountReceived && transaction.tokenReceived) {
     const tokenReceived = transaction.tokenReceived;
@@ -215,6 +243,7 @@ function updateQuantityData(
     initializeTokenData(tokens, tokenReceived);
 
     tokens[tokenReceived]!.quantity.computed += amountReceived;
+    quantityChanged = true;
   }
 
   // Update quantity for sent tokens
@@ -225,6 +254,7 @@ function updateQuantityData(
     initializeTokenData(tokens, tokenSent);
 
     tokens[tokenSent]!.quantity.computed -= amountSent;
+    quantityChanged = true;
   }
 
   // Update quantity for fees
@@ -235,20 +265,37 @@ function updateQuantityData(
     initializeTokenData(tokens, tokenFees);
 
     tokens[tokenFees]!.quantity.computed -= fees;
+    quantityChanged = true;
   }
 
-  // Update delta and deltaPercent
-  Object.values(tokens).forEach((tokenData) => {
-    if (tokenData.quantity.expected !== undefined) {
-      tokenData.quantity.delta =
-        tokenData.quantity.computed - tokenData.quantity.expected;
-      tokenData.quantity.deltaPercent =
-        (tokenData.quantity.delta / tokenData.quantity.expected) * 100;
-    } else {
-      tokenData.quantity.delta = undefined;
-      tokenData.quantity.deltaPercent = undefined;
+  // Add to historic if quantity changed, ensuring no duplicate entries
+  if (quantityChanged) {
+    const updatedTokens = new Set<string>();
+
+    if (transaction.amountReceived && transaction.tokenReceived) {
+      const tokenReceived = transaction.tokenReceived;
+      if (!updatedTokens.has(tokenReceived)) {
+        addHistoricEntry(tokens[tokenReceived]!, date);
+        updatedTokens.add(tokenReceived);
+      }
     }
-  });
+
+    if (transaction.amountSent && transaction.tokenSent) {
+      const tokenSent = transaction.tokenSent;
+      if (!updatedTokens.has(tokenSent)) {
+        addHistoricEntry(tokens[tokenSent]!, date);
+        updatedTokens.add(tokenSent);
+      }
+    }
+
+    if (transaction.fees && transaction.tokenFees) {
+      const tokenFees = transaction.tokenFees;
+      if (!updatedTokens.has(tokenFees)) {
+        addHistoricEntry(tokens[tokenFees]!, date);
+        updatedTokens.add(tokenFees);
+      }
+    }
+  }
 }
 
 /**
@@ -283,7 +330,7 @@ function parseTransactions(transactions: TransactionFromWaltio[]): Result {
       updateCashOutData(transaction, tokens);
     }
 
-    updateQuantityData(transaction, tokens);
+    updateQuantityData(transaction, tokens, transaction.date);
     updateFeesData(transaction, totalFees);
   });
 
@@ -299,7 +346,7 @@ function parseTransactions(transactions: TransactionFromWaltio[]): Result {
     0
   );
 
-  // Calculate pnlRealized and unitPrice for each token
+  // Calculate pnlRealized and unitPrice for each token and update historic
   Object.values(tokens).forEach((tokenData) => {
     tokenData.pnlRealized = tokenData.totalSell - tokenData.totalBuy;
     tokenData.unitPrice =
@@ -307,7 +354,18 @@ function parseTransactions(transactions: TransactionFromWaltio[]): Result {
         ? 0
         : tokenData.quantity.computed !== 0
         ? Math.abs(tokenData.pnlRealized) / tokenData.quantity.computed
-        : 0; // Calculate unitPrice
+        : 0;
+
+    // Update delta and deltaPercent
+    tokenData.quantity.delta =
+      tokenData.quantity.expected !== undefined
+        ? tokenData.quantity.computed - tokenData.quantity.expected
+        : undefined;
+
+    tokenData.quantity.deltaPercent =
+      tokenData.quantity.expected !== undefined
+        ? (tokenData.quantity.delta! / tokenData.quantity.expected) * 100
+        : undefined;
   });
 
   return {
