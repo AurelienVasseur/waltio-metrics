@@ -105,6 +105,23 @@ function initializeTokenData(
 }
 
 /**
+ * Calculates pnlRealized and unitPrice for a token.
+ * @param tokenData - The data of the token to calculate for.
+ * @returns An object containing pnlRealized and unitPrice.
+ */
+function calculatePnlAndUnitPrice(tokenData: TokenData) {
+  const pnlRealized = tokenData.totalSell - tokenData.totalBuy;
+  const unitPrice =
+    pnlRealized > 0
+      ? 0
+      : tokenData.quantity.computed !== 0
+      ? Math.abs(pnlRealized) / tokenData.quantity.computed
+      : 0;
+
+  return { pnlRealized, unitPrice };
+}
+
+/**
  * Adds an entry to the token's historic data.
  * @param tokenData - The data of the token to update.
  * @param date - The date of the transaction.
@@ -115,14 +132,7 @@ function addHistoricEntry(
   date: string,
   transaction: TransactionFromWaltio
 ): void {
-  // Calculate pnlRealized and unitPrice for the historic entry
-  const pnlRealized = tokenData.totalSell - tokenData.totalBuy;
-  const unitPrice =
-    pnlRealized > 0
-      ? 0
-      : tokenData.quantity.computed !== 0
-      ? Math.abs(pnlRealized) / tokenData.quantity.computed
-      : 0;
+  const { pnlRealized, unitPrice } = calculatePnlAndUnitPrice(tokenData);
 
   tokenData.historic.push({
     date,
@@ -372,13 +382,9 @@ function parseTransactions(transactions: TransactionFromWaltio[]): Result {
 
   // Calculate pnlRealized and unitPrice for each token and update historic
   Object.values(tokens).forEach((tokenData) => {
-    tokenData.pnlRealized = tokenData.totalSell - tokenData.totalBuy;
-    tokenData.unitPrice =
-      tokenData.pnlRealized > 0
-        ? 0
-        : tokenData.quantity.computed !== 0
-        ? Math.abs(tokenData.pnlRealized) / tokenData.quantity.computed
-        : 0;
+    const { pnlRealized, unitPrice } = calculatePnlAndUnitPrice(tokenData);
+    tokenData.pnlRealized = pnlRealized;
+    tokenData.unitPrice = unitPrice;
 
     // Update delta and deltaPercent
     tokenData.quantity.delta =
