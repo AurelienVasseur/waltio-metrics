@@ -23,6 +23,7 @@ type TokenData = {
     totalBuy: number;
     totalSell: number;
     quantity: number;
+    transaction: TransactionFromWaltio; // Add transaction details
   }>;
 };
 
@@ -103,13 +104,19 @@ function initializeTokenData(
  * Adds an entry to the token's historic data.
  * @param tokenData - The data of the token to update.
  * @param date - The date of the transaction.
+ * @param transaction - The transaction details.
  */
-function addHistoricEntry(tokenData: TokenData, date: string): void {
+function addHistoricEntry(
+  tokenData: TokenData,
+  date: string,
+  transaction: TransactionFromWaltio
+): void {
   tokenData.historic.push({
     date,
     totalBuy: tokenData.totalBuy,
     totalSell: tokenData.totalSell,
     quantity: tokenData.quantity.computed,
+    transaction, // Add transaction details
   });
 }
 
@@ -275,7 +282,7 @@ function updateQuantityData(
     if (transaction.amountReceived && transaction.tokenReceived) {
       const tokenReceived = transaction.tokenReceived;
       if (!updatedTokens.has(tokenReceived)) {
-        addHistoricEntry(tokens[tokenReceived]!, date);
+        addHistoricEntry(tokens[tokenReceived]!, date, transaction);
         updatedTokens.add(tokenReceived);
       }
     }
@@ -283,7 +290,7 @@ function updateQuantityData(
     if (transaction.amountSent && transaction.tokenSent) {
       const tokenSent = transaction.tokenSent;
       if (!updatedTokens.has(tokenSent)) {
-        addHistoricEntry(tokens[tokenSent]!, date);
+        addHistoricEntry(tokens[tokenSent]!, date, transaction);
         updatedTokens.add(tokenSent);
       }
     }
@@ -291,7 +298,7 @@ function updateQuantityData(
     if (transaction.fees && transaction.tokenFees) {
       const tokenFees = transaction.tokenFees;
       if (!updatedTokens.has(tokenFees)) {
-        addHistoricEntry(tokens[tokenFees]!, date);
+        addHistoricEntry(tokens[tokenFees]!, date, transaction);
         updatedTokens.add(tokenFees);
       }
     }
