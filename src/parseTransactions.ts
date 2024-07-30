@@ -23,6 +23,8 @@ type TokenData = {
     totalBuy: number;
     totalSell: number;
     quantity: number;
+    cashIn: number;
+    cashOut: number;
     transaction: TransactionFromWaltio; // Add transaction details
   }>;
 };
@@ -116,6 +118,8 @@ function addHistoricEntry(
     totalBuy: tokenData.totalBuy,
     totalSell: tokenData.totalSell,
     quantity: tokenData.quantity.computed,
+    cashIn: tokenData.cashIn,
+    cashOut: tokenData.cashOut,
     transaction, // Add transaction details
   });
 }
