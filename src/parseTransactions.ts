@@ -1,5 +1,6 @@
 import { TransactionFromWaltio } from "./types/transactionFromWaltio";
 import expectedQuantities from "./expectedQuantities";
+import groupsConfig from "./groups";
 
 // Define a common type for token data and historic entries
 type TokenDataEntry = {
@@ -28,12 +29,22 @@ type TokenData = TokenDataEntry & {
   >;
 };
 
+type GroupData = {
+  tokens: string[];
+  cashIn: number;
+  cashOut: number;
+  totalBuy: number;
+  totalSell: number;
+  pnlRealized: number;
+};
+
 type Result = {
   overview: {
     cashIn: number;
     cashOut: number;
     fees: number;
   };
+  groups: Record<string, GroupData>;
   tokens: {
     [token: string]: TokenData;
   };
@@ -376,12 +387,41 @@ function parseTransactions(transactions: TransactionFromWaltio[]): Result {
         : undefined;
   });
 
+  // Calculate groups data
+  const groups = Object.keys(groupsConfig).reduce((acc, groupName) => {
+    const tokensInGroup = groupsConfig[groupName]!;
+    const groupData: GroupData = {
+      tokens: [],
+      cashIn: 0,
+      cashOut: 0,
+      totalBuy: 0,
+      totalSell: 0,
+      pnlRealized: 0,
+    };
+
+    tokensInGroup.forEach((tokenName) => {
+      let token = tokens[tokenName];
+      if (token) {
+        groupData.tokens.push(tokenName);
+        groupData.cashIn += token.cashIn;
+        groupData.cashOut += token.cashOut;
+        groupData.totalBuy += token.totalBuy;
+        groupData.totalSell += token.totalSell;
+        groupData.pnlRealized += token.pnlRealized;
+      }
+    });
+
+    acc[groupName] = groupData;
+    return acc;
+  }, {} as Record<string, GroupData>);
+
   return {
     overview: {
       cashIn: totalInvestedFiat,
       cashOut: totalCashOut,
       fees: totalFees.value,
     },
+    groups,
     tokens,
   };
 }
