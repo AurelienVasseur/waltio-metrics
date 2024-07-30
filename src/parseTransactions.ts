@@ -25,6 +25,8 @@ type TokenData = {
     quantity: number;
     cashIn: number;
     cashOut: number;
+    pnlRealized: number;
+    unitPrice: number;
     transaction: TransactionFromWaltio; // Add transaction details
   }>;
 };
@@ -113,6 +115,15 @@ function addHistoricEntry(
   date: string,
   transaction: TransactionFromWaltio
 ): void {
+  // Calculate pnlRealized and unitPrice for the historic entry
+  const pnlRealized = tokenData.totalSell - tokenData.totalBuy;
+  const unitPrice =
+    pnlRealized > 0
+      ? 0
+      : tokenData.quantity.computed !== 0
+      ? Math.abs(pnlRealized) / tokenData.quantity.computed
+      : 0;
+
   tokenData.historic.push({
     date,
     totalBuy: tokenData.totalBuy,
@@ -120,6 +131,8 @@ function addHistoricEntry(
     quantity: tokenData.quantity.computed,
     cashIn: tokenData.cashIn,
     cashOut: tokenData.cashOut,
+    pnlRealized,
+    unitPrice,
     transaction, // Add transaction details
   });
 }
