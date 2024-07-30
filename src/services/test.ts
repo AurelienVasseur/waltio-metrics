@@ -1,7 +1,15 @@
+import expectedQuantities from "./expectedQuantities";
 import { TransactionFromWaltio } from "../types/transactionFromWaltio";
 
+type QuantityData = {
+  computed: number;
+  expected: number | undefined;
+  delta: number | undefined;
+  deltaPercent: number | undefined;
+};
+
 type TokenData = {
-  quantity: number;
+  quantity: QuantityData;
   cashIn: number;
   cashOut: number;
   totalBuy: number;
@@ -63,8 +71,14 @@ function initializeTokenData(
   token: string
 ): void {
   if (!tokens[token]) {
+    const expectedQuantity = expectedQuantities[token];
     tokens[token] = {
-      quantity: 0,
+      quantity: {
+        computed: 0,
+        expected: expectedQuantity,
+        delta: expectedQuantity !== undefined ? 0 : undefined,
+        deltaPercent: expectedQuantity !== undefined ? 0 : undefined,
+      },
       cashIn: 0,
       cashOut: 0,
       totalBuy: 0,
@@ -200,7 +214,7 @@ function updateQuantityData(
 
     initializeTokenData(tokens, tokenReceived);
 
-    tokens[tokenReceived]!.quantity += amountReceived;
+    tokens[tokenReceived]!.quantity.computed += amountReceived;
   }
 
   // Update quantity for sent tokens
@@ -210,7 +224,7 @@ function updateQuantityData(
 
     initializeTokenData(tokens, tokenSent);
 
-    tokens[tokenSent]!.quantity -= amountSent;
+    tokens[tokenSent]!.quantity.computed -= amountSent;
   }
 
   // Update quantity for fees
@@ -220,8 +234,21 @@ function updateQuantityData(
 
     initializeTokenData(tokens, tokenFees);
 
-    tokens[tokenFees]!.quantity -= fees;
+    tokens[tokenFees]!.quantity.computed -= fees;
   }
+
+  // Update delta and deltaPercent
+  Object.values(tokens).forEach((tokenData) => {
+    if (tokenData.quantity.expected !== undefined) {
+      tokenData.quantity.delta =
+        tokenData.quantity.computed - tokenData.quantity.expected;
+      tokenData.quantity.deltaPercent =
+        (tokenData.quantity.delta / tokenData.quantity.expected) * 100;
+    } else {
+      tokenData.quantity.delta = undefined;
+      tokenData.quantity.deltaPercent = undefined;
+    }
+  });
 }
 
 /**
@@ -278,8 +305,8 @@ function parseTransactions(transactions: TransactionFromWaltio[]): Result {
     tokenData.unitPrice =
       tokenData.pnlRealized > 0
         ? 0
-        : tokenData.quantity !== 0
-        ? Math.abs(tokenData.pnlRealized) / tokenData.quantity
+        : tokenData.quantity.computed !== 0
+        ? Math.abs(tokenData.pnlRealized) / tokenData.quantity.computed
         : 0; // Calculate unitPrice
   });
 
