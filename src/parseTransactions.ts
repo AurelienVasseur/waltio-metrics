@@ -33,22 +33,22 @@ type TokenData = TokenDataEntry & {
   >;
 };
 
-type GroupData = {
-  tokens: string[];
+type GroupDataEntry = {
   cashIn: number;
   cashOut: number;
   totalBuy: number;
   totalSell: number;
   pnlRealized: number;
-  historic: Array<{
-    date: string;
-    cashIn: number;
-    cashOut: number;
-    totalBuy: number;
-    totalSell: number;
-    pnlRealized: number;
-    transaction: TransactionFromWaltio;
-  }>;
+};
+
+type GroupData = GroupDataEntry & {
+  tokens: string[];
+  historic: Array<
+    GroupDataEntry & {
+      date: string;
+      transaction: TransactionFromWaltio;
+    }
+  >;
 };
 
 type Result = {
