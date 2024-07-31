@@ -375,6 +375,24 @@ function addGroupHistoricEntry(
   });
 }
 
+// Function to convert a date string to a Date object
+function parseDate(dateString: string) {
+  // Split the date and time
+  let parts = dateString.split(" ");
+  let dateParts = parts[0]!.split("/").map((e) => Number(e));
+  let timeParts = parts[1]!.split(":").map((e) => Number(e));
+
+  // Create a new Date object
+  return new Date(
+    dateParts[2]!, // Year
+    dateParts[1]! - 1, // Month (months are zero-indexed)
+    dateParts[0], // Day
+    timeParts[0], // Hour
+    timeParts[1], // Minute
+    timeParts[2] // Second
+  );
+}
+
 /**
  * Parses a list of transactions to generate an investment summary.
  * @param transactions - An array of transactions from Waltio.
@@ -476,17 +494,17 @@ function parseTransactions(transactions: TransactionFromWaltio[]): Result {
     const tokensInGroup = groupsConfig[groupName]!;
 
     // Collect all historic entries for tokens in this group
-    const groupHistoricEntries = tokensInGroup.flatMap((tokenName) =>
+    let groupHistoricEntries = tokensInGroup.flatMap((tokenName) =>
       tokens[tokenName] ? tokens[tokenName]!.historic : []
     );
 
     // Sort the historic entries by date
-    groupHistoricEntries.sort(
-      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+    const groupHistoricEntriesSorted = groupHistoricEntries.sort(
+      (a, b) => parseDate(a.date).getTime() - parseDate(b.date).getTime()
     );
 
     // Build the group's historic
-    groupHistoricEntries.forEach((entry) => {
+    groupHistoricEntriesSorted.forEach((entry) => {
       const lastEntry = groupData.historic[groupData.historic.length - 1] || {
         cashIn: 0,
         cashOut: 0,
@@ -495,13 +513,16 @@ function parseTransactions(transactions: TransactionFromWaltio[]): Result {
         pnlRealized: 0,
       };
 
+      const newTotalBuy = lastEntry.totalBuy + entry.totalBuyDelta;
+      const newTotalSell = lastEntry.totalSell + entry.totalSellDelta;
+
       groupData.historic.push({
         date: entry.date,
-        cashIn: lastEntry.cashIn + entry.cashIn,
-        cashOut: lastEntry.cashOut + entry.cashOut,
-        totalBuy: lastEntry.totalBuy + entry.totalBuy,
-        totalSell: lastEntry.totalSell + entry.totalSell,
-        pnlRealized: 0,
+        cashIn: lastEntry.cashIn + entry.cashInDelta,
+        cashOut: lastEntry.cashOut + entry.cashOutDelta,
+        totalBuy: newTotalBuy,
+        totalSell: newTotalSell,
+        pnlRealized: newTotalSell - newTotalBuy,
         transaction: entry.transaction,
       });
     });
