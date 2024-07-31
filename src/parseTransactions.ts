@@ -24,6 +24,10 @@ type TokenData = TokenDataEntry & {
     TokenDataEntry & {
       quantity: number;
       date: string;
+      cashInDelta: number;
+      cashOutDelta: number;
+      totalBuyDelta: number;
+      totalSellDelta: number;
       transaction: TransactionFromWaltio;
     }
   >;
@@ -36,6 +40,15 @@ type GroupData = {
   totalBuy: number;
   totalSell: number;
   pnlRealized: number;
+  historic: Array<{
+    date: string;
+    cashIn: number;
+    cashOut: number;
+    totalBuy: number;
+    totalSell: number;
+    pnlRealized: number;
+    transaction: TransactionFromWaltio;
+  }>;
 };
 
 type Result = {
@@ -140,14 +153,25 @@ function addHistoricEntry(
   transaction: TransactionFromWaltio
 ): void {
   const { pnlRealized, unitPrice } = calculatePnlAndUnitPrice(tokenData);
+  const lastHistoricEntry = tokenData.historic[tokenData.historic.length - 1];
+
+  const cashInDelta = tokenData.cashIn - (lastHistoricEntry?.cashIn || 0);
+  const cashOutDelta = tokenData.cashOut - (lastHistoricEntry?.cashOut || 0);
+  const totalBuyDelta = tokenData.totalBuy - (lastHistoricEntry?.totalBuy || 0);
+  const totalSellDelta =
+    tokenData.totalSell - (lastHistoricEntry?.totalSell || 0);
 
   tokenData.historic.push({
     date,
-    totalBuy: tokenData.totalBuy,
-    totalSell: tokenData.totalSell,
     quantity: tokenData.quantity.computed,
+    totalBuy: tokenData.totalBuy,
+    totalBuyDelta,
+    totalSell: tokenData.totalSell,
+    totalSellDelta,
     cashIn: tokenData.cashIn,
+    cashInDelta,
     cashOut: tokenData.cashOut,
+    cashOutDelta,
     pnlRealized,
     unitPrice,
     transaction, // Add transaction details
@@ -322,6 +346,36 @@ function updateQuantityData(
 }
 
 /**
+ * Adds an entry to the group's historic data.
+ * @param groupData - The data of the group to update.
+ * @param date - The date of the transaction.
+ * @param transaction - The transaction details.
+ */
+function addGroupHistoricEntry(
+  groupData: GroupData,
+  date: string,
+  transaction: TransactionFromWaltio
+): void {
+  const lastEntry = groupData.historic[groupData.historic.length - 1] || {
+    cashIn: 0,
+    cashOut: 0,
+    totalBuy: 0,
+    totalSell: 0,
+    pnlRealized: 0,
+  };
+
+  groupData.historic.push({
+    date,
+    cashIn: lastEntry.cashIn,
+    cashOut: lastEntry.cashOut,
+    totalBuy: lastEntry.totalBuy,
+    totalSell: lastEntry.totalSell,
+    pnlRealized: lastEntry.pnlRealized,
+    transaction,
+  });
+}
+
+/**
  * Parses a list of transactions to generate an investment summary.
  * @param transactions - An array of transactions from Waltio.
  * @returns An investment summary including total fiat invested, total fees, and token data.
@@ -397,6 +451,7 @@ function parseTransactions(transactions: TransactionFromWaltio[]): Result {
       totalBuy: 0,
       totalSell: 0,
       pnlRealized: 0,
+      historic: [],
     };
 
     tokensInGroup.forEach((tokenName) => {
@@ -414,6 +469,43 @@ function parseTransactions(transactions: TransactionFromWaltio[]): Result {
     acc[groupName] = groupData;
     return acc;
   }, {} as Record<string, GroupData>);
+
+  // Build the historic for each group
+  Object.keys(groups).forEach((groupName) => {
+    const groupData = groups[groupName]!;
+    const tokensInGroup = groupsConfig[groupName]!;
+
+    // Collect all historic entries for tokens in this group
+    const groupHistoricEntries = tokensInGroup.flatMap((tokenName) =>
+      tokens[tokenName] ? tokens[tokenName]!.historic : []
+    );
+
+    // Sort the historic entries by date
+    groupHistoricEntries.sort(
+      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+    );
+
+    // Build the group's historic
+    groupHistoricEntries.forEach((entry) => {
+      const lastEntry = groupData.historic[groupData.historic.length - 1] || {
+        cashIn: 0,
+        cashOut: 0,
+        totalBuy: 0,
+        totalSell: 0,
+        pnlRealized: 0,
+      };
+
+      groupData.historic.push({
+        date: entry.date,
+        cashIn: lastEntry.cashIn + entry.cashIn,
+        cashOut: lastEntry.cashOut + entry.cashOut,
+        totalBuy: lastEntry.totalBuy + entry.totalBuy,
+        totalSell: lastEntry.totalSell + entry.totalSell,
+        pnlRealized: 0,
+        transaction: entry.transaction,
+      });
+    });
+  });
 
   return {
     overview: {
