@@ -8,8 +8,11 @@ const FILE_PATH = path.resolve(__dirname, "../data/export_waltio.xlsx");
 const main = async () => {
   const transactions = await WaltioService.getTransactions(FILE_PATH);
 
-  const test = parseTransactions(transactions);
-  saveJson(test, "test");
+  const result = parseTransactions(transactions);
+  saveJson(result, "t-all");
+  saveJson(result.overview, "t-overview");
+  saveJson(result.tokens, "t-tokens");
+  saveJson(result.groups, "t-groups");
 };
 
 main().then();
