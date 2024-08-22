@@ -2,7 +2,7 @@ import { TransactionFromWaltio } from "./types/transactionFromWaltio";
 import { config } from "./config";
 
 // Define a common type for token data and historic entries
-type TokenDataEntry = {
+export type TokenDataEntry = {
   cashIn: number;
   cashOut: number;
   totalBuy: number;
@@ -12,7 +12,7 @@ type TokenDataEntry = {
 };
 
 // Define the structure for token data, including historic entries
-type TokenData = TokenDataEntry & {
+export type TokenData = TokenDataEntry & {
   quantity: {
     computed: number;
     expected: number | undefined;
@@ -32,7 +32,7 @@ type TokenData = TokenDataEntry & {
   >;
 };
 
-type GroupDataEntry = {
+export type GroupDataEntry = {
   cashIn: number;
   cashOut: number;
   totalBuy: number;
@@ -40,7 +40,7 @@ type GroupDataEntry = {
   pnlRealized: number;
 };
 
-type GroupData = GroupDataEntry & {
+export type GroupData = GroupDataEntry & {
   tokens: string[];
   historic: Array<
     GroupDataEntry & {
@@ -50,7 +50,7 @@ type GroupData = GroupDataEntry & {
   >;
 };
 
-type Result = {
+export type Result = {
   overview: {
     cashIn: number;
     cashOut: number;
@@ -67,7 +67,7 @@ type Result = {
  * @param transaction - A transaction from Waltio.
  * @returns True if the transaction is a deposit with the label "Achat de crypto" or an exchange involving USD/EUR as the sent token.
  */
-function isFiatInvestmentTransaction(
+export function isFiatInvestmentTransaction(
   transaction: TransactionFromWaltio
 ): boolean {
   return (
@@ -83,7 +83,7 @@ function isFiatInvestmentTransaction(
  * @param transaction - A transaction from Waltio.
  * @returns True if the transaction is a deposit with the label "Achat de crypto" or an exchange.
  */
-function isRelevantInvestmentTransaction(
+export function isRelevantInvestmentTransaction(
   transaction: TransactionFromWaltio
 ): boolean {
   return (
@@ -97,7 +97,7 @@ function isRelevantInvestmentTransaction(
  * @param tokens - An object containing the data for each token.
  * @param token - The token to initialize.
  */
-function initializeTokenData(
+export function initializeTokenData(
   tokens: Record<string, TokenData>,
   token: string
 ): void {
@@ -126,7 +126,7 @@ function initializeTokenData(
  * @param tokenData - The data of the token to calculate for.
  * @returns An object containing pnlRealized and unitPrice.
  */
-function calculatePnlAndUnitPrice(tokenData: TokenData) {
+export function calculatePnlAndUnitPrice(tokenData: TokenData) {
   const pnlRealized = tokenData.totalSell - tokenData.totalBuy;
   const unitPrice =
     pnlRealized > 0
@@ -144,7 +144,7 @@ function calculatePnlAndUnitPrice(tokenData: TokenData) {
  * @param date - The date of the transaction.
  * @param transaction - The transaction details.
  */
-function addHistoricEntry(
+export function addHistoricEntry(
   tokenData: TokenData,
   date: string,
   transaction: TransactionFromWaltio
@@ -180,7 +180,7 @@ function addHistoricEntry(
  * @param transaction - A transaction from Waltio.
  * @param tokens - An object containing the data for each token.
  */
-function updateInvestmentData(
+export function updateInvestmentData(
   transaction: TransactionFromWaltio,
   tokens: Record<string, TokenData>
 ): void {
@@ -212,7 +212,7 @@ function updateInvestmentData(
  * @param transaction - A transaction from Waltio.
  * @param tokens - An object containing the data for each token.
  */
-function updateSellData(
+export function updateSellData(
   transaction: TransactionFromWaltio,
   tokens: Record<string, TokenData>
 ): void {
@@ -241,7 +241,7 @@ function updateSellData(
  * @param transaction - A transaction from Waltio.
  * @param tokens - An object containing the data for each token.
  */
-function updateCashOutData(
+export function updateCashOutData(
   transaction: TransactionFromWaltio,
   tokens: Record<string, TokenData>
 ): void {
@@ -274,7 +274,7 @@ function updateCashOutData(
  * @param transaction - A transaction from Waltio.
  * @param totalFees - A reference to the total fees.
  */
-function updateFeesData(
+export function updateFeesData(
   transaction: TransactionFromWaltio,
   totalFees: { value: number }
 ): void {
@@ -290,7 +290,7 @@ function updateFeesData(
  * @param tokens - An object containing the data for each token.
  * @param date - The date of the transaction.
  */
-function updateQuantityData(
+export function updateQuantityData(
   transaction: TransactionFromWaltio,
   tokens: Record<string, TokenData>,
   date: string
@@ -348,7 +348,7 @@ function updateQuantityData(
  * @param date - The date of the transaction.
  * @param transaction - The transaction details.
  */
-function addGroupHistoricEntry(
+export function addGroupHistoricEntry(
   groupData: GroupData,
   date: string,
   transaction: TransactionFromWaltio
@@ -373,7 +373,7 @@ function addGroupHistoricEntry(
 }
 
 // Function to convert a date string to a Date object
-function parseDate(dateString: string) {
+export function parseDate(dateString: string) {
   // Split the date and time
   let parts = dateString.split(" ");
   let dateParts = parts[0]!.split("/").map((e) => Number(e));
@@ -395,7 +395,7 @@ function parseDate(dateString: string) {
  * @param transactions - An array of transactions from Waltio.
  * @returns An investment summary including total fiat invested, total fees, and token data.
  */
-function parseTransactions(transactions: TransactionFromWaltio[]): Result {
+export function parseTransactions(transactions: TransactionFromWaltio[]): Result {
   const tokens: Record<string, TokenData> = {};
   let totalInvestedFiat = 0;
   let totalFees = { value: 0 };

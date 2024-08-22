@@ -1,4 +1,5 @@
 import configJson from "../config.json";
+import configTestJson from "../config.test.json";
 
 interface Config {
   // Fiat tickers (EUR, USD, etc.)
@@ -12,4 +13,6 @@ interface Config {
   groups: Record<string, string[]>;
 }
 
-export const config: Config = configJson;
+const is_test = process.env.NODE_ENV === "test";
+
+export const config: Config = is_test ? configTestJson : configJson;

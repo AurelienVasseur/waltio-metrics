@@ -1,0 +1,10 @@
+{
+  "fiatTokens": ["USD", "EUR"],
+  "expectedQuantities": {
+    "BTC": 0.5,
+    "ETH": 2
+  },
+  "groups": {
+    "layer_1": ["BTC", "ETH"]
+  }
+}
