@@ -7,6 +7,7 @@ This project provides a function to parse and summarize token transactions, spec
 - [Overview](#overview)
 - [Installation](#installation)
 - [Usage](#usage)
+- [Configuration](#configuration)
 - [Data Structures](#data-structures)
   - [QuantityData](#quantitydata)
   - [TokenData](#tokendata)
@@ -25,8 +26,6 @@ This project provides a function to parse and summarize token transactions, spec
   - [addGroupHistoricEntry](#addgrouphistoricentry)
   - [parseTransactions](#parsetransactions)
 - [Calculation Details](#calculation-details)
-- [Expected Quantities](#expected-quantities)
-- [Groups Configuration](#groups-configuration)
 - [ChatGPT Assistance](#chatgpt-assistance)
 
 ## Overview
@@ -44,18 +43,72 @@ The main goal of this project is to parse token transactions and generate an inv
 
 ## Usage
 
-1. Update the "expectedQuantities.ts" file with the expected quantities for specific tokens.
-2. Update the "groups.ts" file to define the groups of tokens.
-3. Import and use the "parseTransactions" function to parse an array of transactions.
-
-Example usage:
-```typescript
-import parseTransactions from './path/to/parseTransactions';
-import transactions from './path/to/transactions.json';
-
-const result = parseTransactions(transactions);
-console.log(result);
+1. Create a `config.json` file at the root of the project based on the example `config.sample.json` (see [config](#configuration)).
+2. Export your transactions from Waltio (`Mon rapport fiscal > Exports > Exporter`). The exported file must be renamed as `export_waltio.xlsx`.
+3. Create a `data` folder at the root of the project and move the previously exported file inside it.
+4. Start the project:
+```bash
+pnpm start
 ```
+
+That's it 🥳. All metrics will be saved in the `output` folder.
+
+## Configuration
+
+The application needs some configuration to compute metrics as expected. The expected structure of the configuration file is defined in `src/config.ts`. Here is an explaination concerning the expected properties.
+
+### Fiat Tokens
+
+Tokens considered as Fiat are defined in the `fiatTokens` property in the configuration file:
+
+```json
+{
+  ...
+  "fiatTokens": [
+    "USD",
+    "EUR"
+    // Add other fiat tokens here
+  ],
+  ...
+}
+```
+
+`fiatTokens` plays a crucial role in determining whether a transaction should be classified as an investment or withdrawal of fiat currency. By using it, the application effectively distinguishes between fiat and non-fiat transactions, ensuring accurate calculations of cash investments and withdrawals.
+
+### Expected Quantities
+
+The expected quantities for specific tokens are defined in the `expectedQuantities` property in the configuration file:
+
+```json
+{
+  ...
+  "expectedQuantities": {
+    "BTC": 0.21,
+    "ETH": 5
+    // Add other tokens and their expected quantities here
+  },
+  ...
+}
+```
+
+The expected quantities are used to calculate the delta and deltaPercent for each token.
+
+### Groups Configuration
+
+Groups of tokens are defined in the `groups` property in the configuration file. Each group is an array of token symbols that are aggregated together for reporting purposes:
+
+```json
+{
+  ...
+  "groups": {
+    "layer_1": ["BTC", "ETH"]
+    // Add other groups and their tokens here
+  }
+  ...
+}
+```
+
+The groups are used to aggregate data across multiple tokens, allowing for a comprehensive view of the performance of related assets.
 
 ## Data Structures
 
@@ -180,38 +233,6 @@ Parses a list of transactions to generate an investment summary.
 - **cashOutDelta**: The change in "cashOut" compared to the previous entry in the token's historic data.
 - **totalBuyDelta**: The change in "totalBuy" compared to the previous entry in the token's historic data.
 - **totalSellDelta**: The change in "totalSell" compared to the previous entry in the token's historic data.
-
-## Expected Quantities
-
-The expected quantities for specific tokens are defined in "expectedQuantities.ts":
-
-```typescript
-const expectedQuantities: Record<string, number> = {
-  BTC: 0.21,
-  ETH: 5,
-  // Add other tokens and their expected quantities here
-};
-
-export default expectedQuantities;
-```
-
-The expected quantities are used to calculate the delta and deltaPercent for each token.
-
-## Groups Configuration
-
-Groups of tokens are defined in the "groups.ts" file. Each group is an array of token symbols that are aggregated together for reporting purposes:
-
-```typescript
-const groups = {
-  layer_1: ['BTC', 'ETH'],
-  altcoins: ['SOL', 'AVAX'],
-  // Add other groups and their tokens here
-};
-
-export default groups;
-```
-
-The groups are used to aggregate data across multiple tokens, allowing for a comprehensive view of the performance of related assets.
 
 ## ChatGPT Assistance
 

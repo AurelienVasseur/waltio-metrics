@@ -1,6 +1,5 @@
 import { TransactionFromWaltio } from "./types/transactionFromWaltio";
-import expectedQuantities from "./expectedQuantities";
-import groupsConfig from "./groups";
+import { config } from "./config";
 
 // Define a common type for token data and historic entries
 type TokenDataEntry = {
@@ -63,7 +62,7 @@ type Result = {
   };
 };
 
-const fiatTokens = ["USD", "EUR"];
+// const fiatTokens = ["USD", "EUR"];
 
 /**
  * Checks if a transaction is relevant for fiat investment calculations.
@@ -76,7 +75,7 @@ function isFiatInvestmentTransaction(
   return (
     (transaction.type === "Échange" &&
       transaction.tokenSent &&
-      fiatTokens.includes(transaction.tokenSent)) ||
+      config.fiatTokens.includes(transaction.tokenSent)) ||
     (transaction.type === "Dépôt" && transaction.label === "Achat de crypto")
   );
 }
@@ -105,7 +104,7 @@ function initializeTokenData(
   token: string
 ): void {
   if (!tokens[token]) {
-    const expectedQuantity = expectedQuantities[token];
+    const expectedQuantity = config.expectedQuantities[token];
     tokens[token] = {
       quantity: {
         computed: 0,
@@ -256,7 +255,7 @@ function updateCashOutData(
     transaction.tokenSent &&
     transaction.amountSent &&
     transaction.priceTokenSent &&
-    fiatTokens.includes(transaction.tokenReceived)
+    config.fiatTokens.includes(transaction.tokenReceived)
   ) {
     const tokenSent = transaction.tokenSent;
     const amountSent = transaction.amountSent;
@@ -460,8 +459,8 @@ function parseTransactions(transactions: TransactionFromWaltio[]): Result {
   });
 
   // Calculate groups data
-  const groups = Object.keys(groupsConfig).reduce((acc, groupName) => {
-    const tokensInGroup = groupsConfig[groupName]!;
+  const groups = Object.keys(config.groups).reduce((acc, groupName) => {
+    const tokensInGroup = config.groups[groupName]!;
     const groupData: GroupData = {
       tokens: [],
       cashIn: 0,
@@ -491,7 +490,7 @@ function parseTransactions(transactions: TransactionFromWaltio[]): Result {
   // Build the historic for each group
   Object.keys(groups).forEach((groupName) => {
     const groupData = groups[groupName]!;
-    const tokensInGroup = groupsConfig[groupName]!;
+    const tokensInGroup = config.groups[groupName]!;
 
     // Collect all historic entries for tokens in this group
     let groupHistoricEntries = tokensInGroup.flatMap((tokenName) =>
