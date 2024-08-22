@@ -62,8 +62,6 @@ type Result = {
   };
 };
 
-// const fiatTokens = ["USD", "EUR"];
-
 /**
  * Checks if a transaction is relevant for fiat investment calculations.
  * @param transaction - A transaction from Waltio.
