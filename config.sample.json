@@ -1,4 +1,5 @@
 {
+  "filePath": "data/export_waltio.xlsx",
   "fiatTokens": ["USD", "EUR"],
   "expectedQuantities": {
     "BTC": 0.21,

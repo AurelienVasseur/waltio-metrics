@@ -1,8 +1,10 @@
+import * as p from "path";
 import {
   TransactionFromWaltio,
   TransactionFromWaltioZod,
 } from "../types/transactionFromWaltio";
 import { getRowsFromExcelFile, getCellValue } from "../utils/excelUtils";
+import { config } from "../config";
 
 export default class WaltioService {
   /**
@@ -10,7 +12,8 @@ export default class WaltioService {
    * @param path
    * @returns Extract transactions from a Waltio export (xlsx file)
    */
-  static async getTransactions(path: string) {
+  static async getTransactions() {
+    const path: string = p.resolve(__dirname, `../../${config.filePath}`);
     console.log("[WALTIO] Get Transaction: start");
     const rows = await getRowsFromExcelFile(path);
     const transactions = rows.map((row): TransactionFromWaltio => {

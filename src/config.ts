@@ -2,14 +2,22 @@ import configJson from "../config.json";
 import configTestJson from "../config.test.json";
 
 interface Config {
-  // Fiat tickers (EUR, USD, etc.)
+  /**
+   * Path of the file that contains transactions (export from Waltio)
+   */
+  filePath: string;
+  /**
+   * Fiat tickers (EUR, USD, etc.)
+   */
   fiatTokens: string[];
   /**
    * A record of expected quantities for specific tokens.
    * The key is the token symbol and the value is the expected quantity.
    */
   expectedQuantities: Record<string, number>;
-  // Define the groups and their composition
+  /**
+   * Define the groups and their composition
+   */
   groups: Record<string, string[]>;
 }
 
