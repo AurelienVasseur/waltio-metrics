@@ -58,7 +58,7 @@ const mockSellTransaction: TransactionFromWaltio = {
   priceTokenFees: 1,
 };
 
-describe("Token Transaction Parser", () => {
+describe("Waltio Metrics", () => {
   describe("isFiatInvestmentTransaction", () => {
     it("should return true for fiat investment transactions", () => {
       expect(

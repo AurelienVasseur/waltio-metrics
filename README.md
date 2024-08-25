@@ -1,4 +1,4 @@
-# Token Transaction Parser
+# Waltio Metrics
 
 This project provides a function to parse and summarize token transactions, specifically designed to handle transactions from Waltio. The main functionality is implemented in TypeScript, and it calculates various properties for each token and group involved in the transactions, including quantities, cash flows, realized profit and loss (PnL), and historical data.
 
