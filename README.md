@@ -214,6 +214,14 @@ This structure holds the overall summary and token data.
 
 ## Functions
 
+### resolveTokenAlias
+
+Resolves a token name to its main name using the aliases defined in the configuration.
+
+### getTokenAliases
+
+Retrieves the list of aliases for a given token, including the main token name. If the token is not found in the aliases configuration, it returns an array containing only the original token.
+
 ### isFiatInvestmentTransaction
 
 Checks if a transaction is relevant for fiat investment calculations. A transaction is relevant if it's an exchange that involves fiat tokens or a deposit labeled as a crypto purchase ("Achat de crypto").
