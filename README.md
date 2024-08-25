@@ -53,6 +53,16 @@ pnpm start
 
 That's it 🥳. All metrics will be saved in the `output` folder.
 
+## Testing
+
+Unit tests have been implemented to ensure the reliability and correctness of the system. To execute these tests, simply run the command:
+
+```bash
+pnpm test
+```
+
+It is important to note that the successful execution of these tests relies on the configuration provided in the `config.test.json` file. The configuration is not mocked within the tests, so the actual configuration from this file is used to validate the system's behavior. Make sure that `config.test.json` is properly set up before running the tests to avoid any issues.
+
 ## Configuration
 
 The application needs some configuration to compute metrics as expected. The expected structure of the configuration file is defined in `src/config.ts`. Here is an explaination concerning the expected properties.
@@ -98,6 +108,7 @@ The `tokenAliases` configuration is used to map multiple names (aliases) to a si
     "MATIC": ["POL", "Polygon"],
     "ETH": ["Ethereum", "Ether"],
     "BTC": ["Bitcoin"]
+    // Add other aliases here
   },
   ...
 }
@@ -155,6 +166,7 @@ This structure holds the quantity-related data for a token.
 
 This structure holds the comprehensive data for a token.
 
+- `aliases`: An array containing the name of the token and its aliases.
 - `quantity`: An object of type `QuantityData`.
 - `cashIn`: The total amount of fiat currency invested in the token.
 - `cashOut`: The total amount of fiat currency withdrawn from the token.
