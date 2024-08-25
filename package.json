@@ -1,7 +1,7 @@
 {
   "name": "waltio-metrics",
   "version": "1.0.0",
-  "description": "",
+  "description": "Generate an investment summary based on export file from Waltio.",
   "main": "src/index.ts",
   "scripts": {
     "start": "ts-node src/index.ts",
