@@ -1,6 +1,11 @@
 {
   "filePath": "data/export_waltio.xlsx",
   "fiatTokens": ["USD", "EUR"],
+  "tokenAliases": {
+    "MATIC": ["POL", "Polygon"],
+    "ETH": ["Ethereum", "Ether"],
+    "BTC": ["Bitcoin"]
+  },
   "expectedQuantities": {
     "BTC": 0.21,
     "ETH": 5

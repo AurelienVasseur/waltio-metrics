@@ -1,11 +1,17 @@
 {
   "filePath": "tests/export_waltio_test.xlsx",
   "fiatTokens": ["USD", "EUR"],
+  "tokenAliases": {
+    "MATIC": ["POL", "Polygon"],
+    "ETH": ["Ethereum", "Ether"],
+    "BTC": ["Bitcoin"]
+  },
   "expectedQuantities": {
     "BTC": 0.5,
     "ETH": 2
   },
   "groups": {
-    "layer_1": ["BTC", "ETH"]
+    "layer_1": ["BTC", "ETH"],
+    "altcoins": ["SOL", "EGLD", "MATIC"]
   }
 }

@@ -87,6 +87,24 @@ Tokens considered as Fiat are defined in the `fiatTokens` property in the config
 
 `fiatTokens` plays a crucial role in determining whether a transaction should be classified as an investment or withdrawal of fiat currency. By using it, the application effectively distinguishes between fiat and non-fiat transactions, ensuring accurate calculations of cash investments and withdrawals.
 
+### Token Aliases
+
+The `tokenAliases` configuration is used to map multiple names (aliases) to a single primary token name within the system. This is useful when a token may be known by different names or symbols in different contexts, but you want to treat them as the same entity. For example, if "MATIC" is also referred to as "POL" or "Polygon", `tokenAliases` allows you to define these relationships so that operations involving any of these names are consistently attributed to the primary token "MATIC":
+
+```json
+{
+  ...
+  "tokenAliases": {
+    "MATIC": ["POL", "Polygon"],
+    "ETH": ["Ethereum", "Ether"],
+    "BTC": ["Bitcoin"]
+  },
+  ...
+}
+```
+
+Original names/aliases used in a transaction are still visible in the transaction details in history.
+
 ### Expected Quantities
 
 The expected quantities for specific tokens are defined in the `expectedQuantities` property in the configuration file:

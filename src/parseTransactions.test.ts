@@ -13,6 +13,8 @@ import {
   addGroupHistoricEntry,
   parseTransactions,
   TokenData,
+  resolveTokenAlias,
+  getTokenAliases,
 } from "./parseTransactions"; // Adjust the import path as needed
 import { TransactionFromWaltio } from "./types/transactionFromWaltio";
 
@@ -59,6 +61,48 @@ const mockSellTransaction: TransactionFromWaltio = {
 };
 
 describe("Waltio Metrics", () => {
+  describe("resolveTokenAlias", () => {
+    it("should return the main token name when an alias is provided", () => {
+      expect(resolveTokenAlias("POL")).toBe("MATIC");
+      expect(resolveTokenAlias("Polygon")).toBe("MATIC");
+      expect(resolveTokenAlias("Ethereum")).toBe("ETH");
+      expect(resolveTokenAlias("Ether")).toBe("ETH");
+      expect(resolveTokenAlias("Bitcoin")).toBe("BTC");
+    });
+
+    it("should return the same token name if it is already the main token", () => {
+      expect(resolveTokenAlias("MATIC")).toBe("MATIC");
+      expect(resolveTokenAlias("ETH")).toBe("ETH");
+      expect(resolveTokenAlias("BTC")).toBe("BTC");
+    });
+
+    it("should return the original token name if it is not found in the aliases", () => {
+      expect(resolveTokenAlias("DOGE")).toBe("DOGE");
+      expect(resolveTokenAlias("LTC")).toBe("LTC");
+    });
+  });
+
+  describe("getTokenAliases", () => {
+    it("should return an array with the main token and its aliases when the main token is provided", () => {
+      expect(getTokenAliases("MATIC")).toEqual(["MATIC", "POL", "Polygon"]);
+      expect(getTokenAliases("ETH")).toEqual(["ETH", "Ethereum", "Ether"]);
+      expect(getTokenAliases("BTC")).toEqual(["BTC", "Bitcoin"]);
+    });
+
+    it("should return an array with the main token and its aliases when an alias is provided", () => {
+      expect(getTokenAliases("POL")).toEqual(["MATIC", "POL", "Polygon"]);
+      expect(getTokenAliases("Polygon")).toEqual(["MATIC", "POL", "Polygon"]);
+      expect(getTokenAliases("Ethereum")).toEqual(["ETH", "Ethereum", "Ether"]);
+      expect(getTokenAliases("Ether")).toEqual(["ETH", "Ethereum", "Ether"]);
+      expect(getTokenAliases("Bitcoin")).toEqual(["BTC", "Bitcoin"]);
+    });
+
+    it("should return an array containing only the token if it is not found in the aliases", () => {
+      expect(getTokenAliases("DOGE")).toEqual(["DOGE"]);
+      expect(getTokenAliases("LTC")).toEqual(["LTC"]);
+    });
+  });
+
   describe("isFiatInvestmentTransaction", () => {
     it("should return true for fiat investment transactions", () => {
       expect(
@@ -115,6 +159,7 @@ describe("Waltio Metrics", () => {
       let tokens: Record<string, TokenData> = {};
       initializeTokenData(tokens, "BTC");
       expect(tokens["BTC"]).toEqual({
+        aliases: ["BTC", "Bitcoin"],
         quantity: {
           computed: 0,
           expected: 0.5,
@@ -253,7 +298,11 @@ describe("Waltio Metrics", () => {
   describe("parseTransactions", () => {
     it("should correctly parse transactions and return a comprehensive result", () => {
       const transactions = [
-        { ...mockTransaction, type: "Dépôt" as const, label: "Achat de crypto" },
+        {
+          ...mockTransaction,
+          type: "Dépôt" as const,
+          label: "Achat de crypto",
+        },
         { ...mockTransaction, tokenSent: "EUR" },
       ];
       const result = parseTransactions(transactions);

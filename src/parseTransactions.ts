@@ -13,6 +13,7 @@ export type TokenDataEntry = {
 
 // Define the structure for token data, including historic entries
 export type TokenData = TokenDataEntry & {
+  aliases: string[];
   quantity: {
     computed: number;
     expected: number | undefined;
@@ -63,6 +64,35 @@ export type Result = {
 };
 
 /**
+ * Resolves a token name to its main name using the aliases defined in the configuration.
+ * @param token - The token name to resolve.
+ * @returns The main token name or the original name if no alias is found.
+ */
+export function resolveTokenAlias(token: string): string {
+  for (const [mainToken, aliases] of Object.entries(config.tokenAliases)) {
+    if (aliases.includes(token)) {
+      return mainToken;
+    }
+  }
+  return token; // Returns the original token if no alias is found
+}
+
+/**
+ * Retrieves the list of aliases for a given token, including the main token name.
+ * If the token is not found in the aliases configuration, it returns an array containing only the original token.
+ * @param token - The token name to look up.
+ * @returns An array of strings containing the main token name and its aliases.
+ */
+export function getTokenAliases(token: string): string[] {
+  for (const [mainToken, aliases] of Object.entries(config.tokenAliases)) {
+    if (mainToken === token || aliases.includes(token)) {
+      return [...new Set<string>([mainToken, ...aliases])];
+    }
+  }
+  return [token];
+}
+
+/**
  * Checks if a transaction is relevant for fiat investment calculations.
  * @param transaction - A transaction from Waltio.
  * @returns True if the transaction is a deposit with the label "Achat de crypto" or an exchange involving USD/EUR as the sent token.
@@ -101,9 +131,11 @@ export function initializeTokenData(
   tokens: Record<string, TokenData>,
   token: string
 ): void {
-  if (!tokens[token]) {
-    const expectedQuantity = config.expectedQuantities[token];
-    tokens[token] = {
+  const resolvedToken = resolveTokenAlias(token);
+  if (!tokens[resolvedToken]) {
+    const expectedQuantity = config.expectedQuantities[resolvedToken];
+    tokens[resolvedToken] = {
+      aliases: getTokenAliases(resolvedToken),
       quantity: {
         computed: 0,
         expected: expectedQuantity !== undefined ? expectedQuantity : undefined,
@@ -189,7 +221,7 @@ export function updateInvestmentData(
     transaction.priceTokenReceived &&
     transaction.tokenReceived
   ) {
-    const tokenReceived = transaction.tokenReceived;
+    const tokenReceived = resolveTokenAlias(transaction.tokenReceived);
     const amountReceived = transaction.amountReceived;
     const priceTokenReceived = transaction.priceTokenReceived;
 
@@ -222,7 +254,7 @@ export function updateSellData(
     transaction.priceTokenSent &&
     transaction.tokenSent
   ) {
-    const tokenSent = transaction.tokenSent;
+    const tokenSent = resolveTokenAlias(transaction.tokenSent);
     const amountSent = transaction.amountSent;
     const priceTokenSent = transaction.priceTokenSent;
 
@@ -255,7 +287,7 @@ export function updateCashOutData(
     transaction.priceTokenSent &&
     config.fiatTokens.includes(transaction.tokenReceived)
   ) {
-    const tokenSent = transaction.tokenSent;
+    const tokenSent = resolveTokenAlias(transaction.tokenSent);
     const amountSent = transaction.amountSent;
     const priceTokenSent = transaction.priceTokenSent;
 
@@ -300,7 +332,7 @@ export function updateQuantityData(
 
   // Update quantity for received tokens
   if (transaction.amountReceived && transaction.tokenReceived) {
-    const tokenReceived = transaction.tokenReceived;
+    const tokenReceived = resolveTokenAlias(transaction.tokenReceived);
     const amountReceived = transaction.amountReceived;
 
     initializeTokenData(tokens, tokenReceived);
@@ -312,7 +344,7 @@ export function updateQuantityData(
 
   // Update quantity for sent tokens
   if (transaction.amountSent && transaction.tokenSent) {
-    const tokenSent = transaction.tokenSent;
+    const tokenSent = resolveTokenAlias(transaction.tokenSent);
     const amountSent = transaction.amountSent;
 
     initializeTokenData(tokens, tokenSent);
@@ -324,7 +356,7 @@ export function updateQuantityData(
 
   // Update quantity for fees
   if (transaction.fees && transaction.tokenFees) {
-    const tokenFees = transaction.tokenFees;
+    const tokenFees = resolveTokenAlias(transaction.tokenFees);
     const fees = transaction.fees;
 
     initializeTokenData(tokens, tokenFees);
@@ -395,7 +427,9 @@ export function parseDate(dateString: string) {
  * @param transactions - An array of transactions from Waltio.
  * @returns An investment summary including total fiat invested, total fees, and token data.
  */
-export function parseTransactions(transactions: TransactionFromWaltio[]): Result {
+export function parseTransactions(
+  transactions: TransactionFromWaltio[]
+): Result {
   const tokens: Record<string, TokenData> = {};
   let totalInvestedFiat = 0;
   let totalFees = { value: 0 };
@@ -470,9 +504,10 @@ export function parseTransactions(transactions: TransactionFromWaltio[]): Result
     };
 
     tokensInGroup.forEach((tokenName) => {
-      let token = tokens[tokenName];
+      const resolvedTokenName = resolveTokenAlias(tokenName);
+      let token = tokens[resolvedTokenName];
       if (token) {
-        groupData.tokens.push(tokenName);
+        groupData.tokens.push(resolvedTokenName);
         groupData.cashIn += token.cashIn;
         groupData.cashOut += token.cashOut;
         groupData.totalBuy += token.totalBuy;
