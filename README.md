@@ -14,6 +14,8 @@ This project provides a function to parse and summarize token transactions, spec
   - [GroupData](#groupdata)
   - [Result](#result)
 - [Functions](#functions)
+  - [resolveTokenAlias](#resolveTokenAlias)
+  - [getTokenAliases](#getTokenAliases)
   - [isFiatInvestmentTransaction](#isfiatinvestmenttransaction)
   - [isRelevantInvestmentTransaction](#isrelevantinvestmenttransaction)
   - [initializeTokenData](#initializetokendata)
