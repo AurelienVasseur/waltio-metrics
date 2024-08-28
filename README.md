@@ -2,6 +2,8 @@
 
 This project provides a function to parse and summarize token transactions, specifically designed to handle transactions from Waltio. The main functionality is implemented in TypeScript, and it calculates various properties for each token and group involved in the transactions, including quantities, cash flows, realized profit and loss (PnL), and historical data.
 
+Based on the computed metrics, the project also includes a function to estimate the wallet's valuation under different scenarios.
+
 ## Table of Contents
 
 - [Overview](#overview)
@@ -9,25 +11,17 @@ This project provides a function to parse and summarize token transactions, spec
 - [Usage](#usage)
 - [Configuration](#configuration)
 - [Data Structures](#data-structures)
-  - [QuantityData](#quantitydata)
-  - [TokenData](#tokendata)
-  - [GroupData](#groupdata)
-  - [Result](#result)
-- [Functions](#functions)
-  - [resolveTokenAlias](#resolveTokenAlias)
-  - [getTokenAliases](#getTokenAliases)
-  - [isFiatInvestmentTransaction](#isfiatinvestmenttransaction)
-  - [isRelevantInvestmentTransaction](#isrelevantinvestmenttransaction)
-  - [initializeTokenData](#initializetokendata)
-  - [updateInvestmentData](#updateinvestmentdata)
-  - [updateSellData](#updateselldata)
-  - [updateCashOutData](#updatecashoutdata)
-  - [updateFeesData](#updatefeesdata)
-  - [updateQuantityData](#updatequantitydata)
-  - [addHistoricEntry](#addhistoricentry)
-  - [addGroupHistoricEntry](#addgrouphistoricentry)
-  - [parseTransactions](#parsetransactions)
-- [Calculation Details](#calculation-details)
+  - [Parse Transaction](#parse-transactions)
+    - [QuantityData](#quantitydata)
+    - [TokenData](#tokendata)
+    - [GroupData](#groupdata)
+    - [Result](#result)
+  - [Valuation](#valuation)
+    - [TokenValuation](#tokenValuation)
+    - [ScenarioValuation](#scenarioValuation)
+    - [ValuationsResult](#valuationsResult)
+- [Metrics Calculation Details](#metrics-calculation-details)
+- [Valuation Calculation Details](#valuation-calculation-details)
 - [ChatGPT Assistance](#chatgpt-assistance)
 
 ## Overview
@@ -153,9 +147,42 @@ Groups of tokens are defined in the `groups` property in the configuration file.
 
 The groups are used to aggregate data across multiple tokens, allowing for a comprehensive view of the performance of related assets.
 
+### Scenarios
+
+Scenarios in the valuation process allow you to assess the potential value of a token or a portfolio under different market conditions or assumptions. They provide a way to compare and analyze how changes in variables, such as market prices or token quantities, impact the overall valuation, helping in strategic decision-making and risk assessment.
+
+```json
+{
+  ...
+  "scenarios": {
+    "Optimistic": {
+      "description": "A scenario where the market is bullish and prices are high.",
+      "prices": {
+        "MATIC": 2.5,
+        "ETH": 3500,
+        "BTC": 60000
+      }
+    },
+    "Pessimistic": {
+      "description": "A scenario where the market is bearish and prices are low.",
+      "prices": {
+        "MATIC": 0.8,
+        "ETH": 1500,
+        "BTC": 30000
+      }
+    }
+    // Add other scenarios here
+  },
+  ...
+}
+```
+
+
 ## Data Structures
 
-### QuantityData
+### Parse Transactions
+
+#### QuantityData
 
 This structure holds the quantity-related data for a token.
 
@@ -164,7 +191,7 @@ This structure holds the quantity-related data for a token.
 - `delta`: The difference between the computed and expected quantities.
 - `deltaPercent`: The percentage difference between the computed and expected quantities.
 
-### TokenData
+#### TokenData
 
 This structure holds the comprehensive data for a token.
 
@@ -184,7 +211,7 @@ This structure holds the comprehensive data for a token.
   - `totalSellDelta`: The change in `totalSell` compared to the previous entry.
   - `transaction`: The transaction details.
 
-### GroupData
+#### GroupData
 
 This structure holds the comprehensive data for a group of tokens.
 
@@ -203,7 +230,7 @@ This structure holds the comprehensive data for a group of tokens.
   - `pnlRealized`: The aggregated realized PnL for the group at that point in time.
   - `transaction`: The transaction details.
 
-### Result
+#### Result
 
 This structure holds the overall summary and token data.
 
@@ -214,77 +241,80 @@ This structure holds the overall summary and token data.
 - `groups`: An object where each key is a group name and the value is an object of type `GroupData`.
 - `tokens`: An object where each key is a token symbol and the value is an object of type `TokenData`.
 
-## Functions
+### Valuation
 
-### resolveTokenAlias
+#### TokenValuation
 
-Resolves a token name to its main name using the aliases defined in the configuration.
+This structure holds the valuation data for a token under a specific scenario.
 
-### getTokenAliases
+- `computed`: The computed valuation of the token based on the given scenario.
+- `expected`: The expected valuation of the token, if expected quantities are defined.
 
-Retrieves the list of aliases for a given token, including the main token name. If the token is not found in the aliases configuration, it returns an array containing only the original token.
+#### ScenarioValuation
 
-### isFiatInvestmentTransaction
+This structure holds the valuation data for all tokens under a specific scenario, including the total computed and expected valuations.
 
-Checks if a transaction is relevant for fiat investment calculations. A transaction is relevant if it's an exchange that involves fiat tokens or a deposit labeled as a crypto purchase ("Achat de crypto").
+- `scenarioName`: The name of the scenario.
+- `scenarioDescription`: A brief description of the scenario.
+- `tokenValuations`: A record object where each key is a token symbol and the value is an object of type `TokenValuation`.
+- `totalComputed`: The total computed valuation for all tokens under the scenario.
+- `totalExpected`: The total expected valuation for all tokens under the scenario, if defined.
 
-### isRelevantInvestmentTransaction
+#### ValuationsResult
 
-Checks if a transaction is relevant for total investment calculations. A transaction is relevant if it's a deposit with the label "Achat de crypto" or an exchange.
+This structure represents the overall valuation result across multiple scenarios.
 
-### initializeTokenData
+- An array of objects, each representing a different scenario's valuation, where each object is of type `ScenarioValuation`.
 
-Initializes token data if it does not exist.
 
-### updateInvestmentData
-
-Updates the token data with the investment information.
-
-### updateSellData
-
-Updates the token data with the sell information.
-
-### updateCashOutData
-
-Updates the token data with the cash-out information.
-
-### updateFeesData
-
-Updates the token data with the fees information.
-
-### updateQuantityData
-
-Updates the token data with the quantity information and calculates delta and deltaPercent.
-
-### addHistoricEntry
-
-Adds an entry to the token's historic data.
-
-### addGroupHistoricEntry
-
-Adds an entry to the group's historic data.
-
-### parseTransactions
-
-Parses a list of transactions to generate an investment summary.
-
-## Calculation Details
+## Metrics Calculation Details
 
 - **cashIn**: The total amount of fiat currency invested in a token. Calculated by summing up the value of all relevant "Dépôt" transactions with the label "Achat de crypto" and relevant "Échange" transactions involving USD/EUR as the sent token.
+
 - **cashOut**: The total amount of fiat currency withdrawn from a token. Calculated by summing up the value of all relevant "Échange" transactions where USD/EUR is the received token.
+
 - **totalBuy**: The total value of the token bought. Calculated by summing up the product of "amountReceived" and "priceTokenReceived" for all relevant transactions.
+
 - **totalSell**: The total value of the token sold. Calculated by summing up the product of "amountSent" and "priceTokenSent" for all relevant transactions.
+
 - **pnlRealized**: The realized profit and loss. Calculated as "totalSell" - "totalBuy".
+
 - **unitPrice**: The unit price required for the realized PnL to be zero. Calculated as "abs(pnlRealized) / quantity.computed" if "quantity.computed" is not zero and "pnlRealized" is not positive; otherwise, it is set to zero.
+
 - **quantity**: 
   - **computed**: Updated by summing "amountReceived" and subtracting "amountSent" and "fees" for each transaction.
   - **expected**: Taken from "expectedQuantities.ts".
   - **delta**: Calculated as "computed - expected".
   - **deltaPercent**: Calculated as "(delta / expected) * 100" if "expected" is defined.
+
 - **cashInDelta**: The change in "cashIn" compared to the previous entry in the token's historic data.
+
 - **cashOutDelta**: The change in "cashOut" compared to the previous entry in the token's historic data.
+
 - **totalBuyDelta**: The change in "totalBuy" compared to the previous entry in the token's historic data.
+
 - **totalSellDelta**: The change in "totalSell" compared to the previous entry in the token's historic data.
+
+## Valuation Calculation Details
+
+- **computed**: The computed valuation of a token or scenario. Calculated by taking the current market price of the token (within the scenario) and multiplying it by the quantity of the token held. For scenarios, it is the sum of computed valuations for all tokens within the scenario.
+
+- **expected**: The expected valuation of a token or scenario. This value is predefined in the configuration or derived from expected quantities and current market prices (within the scenario). For scenarios, it is the sum of expected valuations for all tokens within the scenario.
+
+- **totalComputed**: The aggregated computed valuation across all tokens in a scenario. Calculated by summing up the "computed" valuations for each token within the scenario.
+
+- **totalExpected**: The aggregated expected valuation across all tokens in a scenario. Calculated by summing up the "expected" valuations for each token within the scenario. If the expected value is not defined for a token, it is excluded from this total.
+
+- **scenarioName**: The name of the scenario used for valuation. This is a descriptive identifier provided in the configuration.
+
+- **scenarioDescription**: A brief description of the scenario, outlining the assumptions or conditions under which the valuation is performed. This helps contextualize the computed and expected values.
+
+- **tokenValuations**: A detailed record of valuations for each token under a specific scenario. Each entry includes the "computed" and "expected" values for a token, as described above.
+
+- **totalComputed**: For the overall valuation, this represents the sum of all computed valuations across all scenarios. It gives a comprehensive view of the wallet's value under various conditions.
+
+- **totalExpected**: For the overall valuation, this represents the sum of all expected valuations across all scenarios. It provides a benchmark or target value for the wallet under various conditions.
+
 
 ## ChatGPT Assistance
 

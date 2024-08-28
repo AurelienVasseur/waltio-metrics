@@ -12,5 +12,29 @@
   },
   "groups": {
     "layer_1": ["BTC", "ETH"]
+  },
+  "scenarios": {
+    "Optimistic": {
+      "description": "A scenario where the market is bullish and prices are high.",
+      "prices": {
+        "MATIC": 2.5,
+        "ETH": 3500,
+        "BTC": 60000
+      }
+    },
+    "Pessimistic": {
+      "description": "A scenario where the market is bearish and prices are low.",
+      "prices": {
+        "MATIC": 0.8,
+        "ETH": 1500,
+        "BTC": 30000
+      }
+    },
+    "PartialScenario": {
+      "description": "A scenario with missing token prices.",
+      "prices": {
+        "MATIC": 2.0
+      }
+    }
   }
 }

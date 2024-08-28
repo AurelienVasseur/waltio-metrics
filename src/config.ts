@@ -23,6 +23,17 @@ interface Config {
    * Define the groups and their composition.
    */
   groups: Record<string, string[]>;
+  /**
+   * Represents a single pricing scenario with a description
+   * and expected prices for tokens.
+   */
+  scenarios: Record<
+    string,
+    {
+      description: string;
+      prices: Record<string, number>;
+    }
+  >;
 }
 
 const is_test = process.env.NODE_ENV === "test";

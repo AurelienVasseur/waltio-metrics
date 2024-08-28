@@ -94,6 +94,7 @@ export function getTokenAliases(token: string): string[] {
 
 /**
  * Checks if a transaction is relevant for fiat investment calculations.
+ * A transaction is relevant if it's an exchange that involves fiat tokens or a deposit labeled as a crypto purchase ("Achat de crypto").
  * @param transaction - A transaction from Waltio.
  * @returns True if the transaction is a deposit with the label "Achat de crypto" or an exchange involving USD/EUR as the sent token.
  */
@@ -110,6 +111,7 @@ export function isFiatInvestmentTransaction(
 
 /**
  * Checks if a transaction is relevant for total investment calculations.
+ * A transaction is relevant if it's a deposit with the label "Achat de crypto" or an exchange.
  * @param transaction - A transaction from Waltio.
  * @returns True if the transaction is a deposit with the label "Achat de crypto" or an exchange.
  */
