@@ -1,0 +1,28 @@
+[
+  {
+    "scenarioName": "Optimistic",
+    "scenarioDescription": "A scenario where the market is bullish and prices are high.",
+    "tokenValuations": {
+      "ETH": { "computed": 997.4999999999999, "expected": 7000 },
+      "BTC": { "computed": 5880, "expected": 30000 },
+      "MATIC": { "computed": 183.75 }
+    },
+    "totalComputed": 7061.25
+  },
+  {
+    "scenarioName": "Pessimistic",
+    "scenarioDescription": "A scenario where the market is bearish and prices are low.",
+    "tokenValuations": {
+      "ETH": { "computed": 427.49999999999994, "expected": 3000 },
+      "BTC": { "computed": 2940, "expected": 15000 },
+      "MATIC": { "computed": 58.800000000000004 }
+    },
+    "totalComputed": 3426.3
+  },
+  {
+    "scenarioName": "PartialScenario",
+    "scenarioDescription": "A scenario with missing token prices.",
+    "tokenValuations": { "MATIC": { "computed": 147 } },
+    "totalComputed": 147
+  }
+]
