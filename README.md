@@ -40,7 +40,7 @@ The main goal of this project is to parse token transactions and generate an inv
 ## Usage
 
 1. Create a `config.json` file at the root of the project based on the example `config.sample.json` (see [config](#configuration)).
-2. Export your transactions from Waltio (`Mon rapport fiscal > Exports > Exporter`). It must be an Excel file (`.xlsx`).
+2. Export your transactions from Waltio (`Mon rapport fiscal > Tous les documents > Exports > Exporter`). It must be an Excel file (`.xlsx`).
 3. Create a `data` folder at the root of the project and move the previously exported file inside it.
 4. Start the project:
 ```bash
