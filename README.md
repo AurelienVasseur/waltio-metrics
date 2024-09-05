@@ -191,6 +191,13 @@ This structure holds the quantity-related data for a token.
 - `delta`: The difference between the computed and expected quantities.
 - `deltaPercent`: The percentage difference between the computed and expected quantities.
 
+#### UnitPriceData
+
+This structure holds the unit price related data for a token.
+
+- `computed`: The unit price based on the computed quantity and the realized PnL.
+- `expected`: The unit price based on the expected quantity and the realized PnL.
+
 #### TokenData
 
 This structure holds the comprehensive data for a token.
@@ -202,13 +209,19 @@ This structure holds the comprehensive data for a token.
 - `totalBuy`: The total value of the token bought.
 - `totalSell`: The total value of the token sold.
 - `pnlRealized`: The realized profit and loss for the token.
-- `unitPrice`: The unit price required for the realized PnL to be zero.
+- `unitPrice`: An object of type `UnitPriceData`.
 - `historic`: An array of historical entries, each including:
+  - `quantity`: The computed quantity at that point in time.
   - `date`: The date of the transaction.
+  - `cashIn`: The total amount of fiat currency invested in the token at that point in time.
   - `cashInDelta`: The change in `cashIn` compared to the previous entry.
+  - `cashOut`: The total amount of fiat currency withdrawn from the token at that point in time.
   - `cashOutDelta`: The change in `cashOut` compared to the previous entry.
+  - `totalBuy`: The total value of the token bought at that point in time.
   - `totalBuyDelta`: The change in `totalBuy` compared to the previous entry.
+  - `totalSell`: The total value of the token sold at that point in time.
   - `totalSellDelta`: The change in `totalSell` compared to the previous entry.
+  - `pnlRealized`: The realized profit and loss for the token at that point in time.
   - `transaction`: The transaction details.
 
 #### GroupData
@@ -279,7 +292,9 @@ This structure represents the overall valuation result across multiple scenarios
 
 - **pnlRealized**: The realized profit and loss. Calculated as "totalSell" - "totalBuy".
 
-- **unitPrice**: The unit price required for the realized PnL to be zero. Calculated as "abs(pnlRealized) / quantity.computed" if "quantity.computed" is not zero and "pnlRealized" is not positive; otherwise, it is set to zero.
+- **unitPrice**: 
+  - **computed**: The unit price required for the realized PnL to be zero based on the computed quantity. Calculated as "abs(pnlRealized) / quantity.computed" if "quantity.computed" is not zero and "pnlRealized" is not positive; otherwise, it is set to zero.
+  - **expected**: The unit price required for the realized PnL to be zero based on the expected quantity. Calculated as "abs(pnlRealized) / quantity.expected" if "quantity.expected" is defined in the configuration and not zero and "pnlRealized" is not positive; otherwise, it is set to zero.
 
 - **quantity**: 
   - **computed**: Updated by summing "amountReceived" and subtracting "amountSent" and "fees" for each transaction.

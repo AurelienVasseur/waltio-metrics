@@ -8,7 +8,6 @@ export type TokenDataEntry = {
   totalBuy: number;
   totalSell: number;
   pnlRealized: number;
-  unitPrice: number;
 };
 
 // Define the structure for token data, including historic entries
@@ -20,6 +19,10 @@ export type TokenData = TokenDataEntry & {
     delta: number | undefined;
     deltaPercent: number | undefined;
   };
+  unitPrice: {
+    computed: number;
+    expected: number | undefined;
+  };
   historic: Array<
     TokenDataEntry & {
       quantity: number;
@@ -28,6 +31,7 @@ export type TokenData = TokenDataEntry & {
       cashOutDelta: number;
       totalBuyDelta: number;
       totalSellDelta: number;
+      unitPrice: number;
       transaction: TransactionFromWaltio;
     }
   >;
@@ -149,7 +153,10 @@ export function initializeTokenData(
       totalBuy: 0,
       totalSell: 0,
       pnlRealized: 0,
-      unitPrice: 0,
+      unitPrice: {
+        computed: 0,
+        expected: expectedQuantity !== undefined ? 0 : undefined,
+      },
       historic: [],
     };
   }
@@ -162,14 +169,21 @@ export function initializeTokenData(
  */
 export function calculatePnlAndUnitPrice(tokenData: TokenData) {
   const pnlRealized = tokenData.totalSell - tokenData.totalBuy;
-  const unitPrice =
+  const unitPriceComputed =
     pnlRealized > 0
       ? 0
       : tokenData.quantity.computed !== 0
       ? Math.abs(pnlRealized) / tokenData.quantity.computed
       : 0;
+  const unitPriceExpected =
+    pnlRealized > 0
+      ? 0
+      : tokenData.quantity.expected !== 0 &&
+        tokenData.quantity.expected !== undefined
+      ? Math.abs(pnlRealized) / tokenData.quantity.expected
+      : 0;
 
-  return { pnlRealized, unitPrice };
+  return { pnlRealized, unitPriceComputed, unitPriceExpected };
 }
 
 /**
@@ -183,7 +197,8 @@ export function addHistoricEntry(
   date: string,
   transaction: TransactionFromWaltio
 ): void {
-  const { pnlRealized, unitPrice } = calculatePnlAndUnitPrice(tokenData);
+  const { pnlRealized, unitPriceComputed } =
+    calculatePnlAndUnitPrice(tokenData);
   const lastHistoricEntry = tokenData.historic[tokenData.historic.length - 1];
 
   const cashInDelta = tokenData.cashIn - (lastHistoricEntry?.cashIn || 0);
@@ -204,7 +219,7 @@ export function addHistoricEntry(
     cashOut: tokenData.cashOut,
     cashOutDelta,
     pnlRealized,
-    unitPrice,
+    unitPrice: unitPriceComputed,
     transaction, // Add transaction details
   });
 }
@@ -476,9 +491,13 @@ export function parseTransactions(
 
   // Calculate pnlRealized and unitPrice for each token and update historic
   Object.values(tokens).forEach((tokenData) => {
-    const { pnlRealized, unitPrice } = calculatePnlAndUnitPrice(tokenData);
+    const { pnlRealized, unitPriceComputed, unitPriceExpected } =
+      calculatePnlAndUnitPrice(tokenData);
     tokenData.pnlRealized = pnlRealized;
-    tokenData.unitPrice = unitPrice;
+    tokenData.unitPrice = {
+      computed: unitPriceComputed,
+      expected: unitPriceExpected,
+    };
 
     // Update delta and deltaPercent
     tokenData.quantity.delta =
