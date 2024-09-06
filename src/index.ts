@@ -9,11 +9,11 @@ const main = async () => {
   const result = parseTransactions(transactions);
   const valuation = calculateValuations(result);
 
-  saveJson(result, "all");
-  saveJson(result.overview, "overview");
-  saveJson(result.tokens, "tokens");
-  saveJson(result.groups, "groups");
-  saveJson(valuation, "valuation")
+  saveJson(result, "t-all");
+  saveJson(result.overview, "t-overview");
+  saveJson(result.tokens, "t-tokens");
+  saveJson(result.groups, "t-groups");
+  saveJson(valuation, "t-valuation")
 };
 
 main().then();

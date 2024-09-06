@@ -333,7 +333,7 @@
       "totalBuy": 253,
       "totalSell": 7090,
       "pnlRealized": 6837,
-      "unitPrice": 0,
+      "unitPrice": { "computed": 0, "expected": 0 },
       "historic": [
         {
           "date": "15/05/2019 17:58:24",
@@ -615,7 +615,7 @@
       "totalBuy": 2000,
       "totalSell": 1002,
       "pnlRealized": -998,
-      "unitPrice": 3501.7543859649127,
+      "unitPrice": { "computed": 3501.7543859649127, "expected": 499 },
       "historic": [
         {
           "date": "28/05/2021 07:23:20",
@@ -700,7 +700,7 @@
       "totalBuy": 5000,
       "totalSell": 0,
       "pnlRealized": -5000,
-      "unitPrice": 51020.4081632653,
+      "unitPrice": { "computed": 51020.4081632653, "expected": 10000 },
       "historic": [
         {
           "date": "28/05/2021 07:24:33",
@@ -746,7 +746,7 @@
       "totalBuy": 1400,
       "totalSell": 3937.5,
       "pnlRealized": 2537.5,
-      "unitPrice": 0,
+      "unitPrice": { "computed": 0, "expected": 0 },
       "historic": [
         {
           "date": "01/06/2021 07:18:18",
@@ -854,7 +854,7 @@
       "totalBuy": 158,
       "totalSell": 0,
       "pnlRealized": -158,
-      "unitPrice": 22.571428571428573,
+      "unitPrice": { "computed": 22.571428571428573, "expected": 0 },
       "historic": [
         {
           "date": "01/06/2021 07:20:18",
@@ -934,7 +934,7 @@
       "totalBuy": 1002,
       "totalSell": 250,
       "pnlRealized": -752,
-      "unitPrice": 1.0040053404539386,
+      "unitPrice": { "computed": 1.0040053404539386, "expected": 0 },
       "historic": [
         {
           "date": "13/06/2021 16:38:42",
@@ -1073,7 +1073,7 @@
       "totalBuy": 3829.5000000000005,
       "totalSell": 0,
       "pnlRealized": -3829.5000000000005,
-      "unitPrice": 1.11,
+      "unitPrice": { "computed": 1.11, "expected": 0 },
       "historic": [
         {
           "date": "03/10/2021 21:33:12",
@@ -1119,7 +1119,7 @@
       "totalBuy": 40,
       "totalSell": 3,
       "pnlRealized": -37,
-      "unitPrice": 0.5034013605442177,
+      "unitPrice": { "computed": 0.5034013605442177, "expected": 0 },
       "historic": [
         {
           "date": "18/10/2021 01:34:08",
