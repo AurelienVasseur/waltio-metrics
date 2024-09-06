@@ -171,7 +171,10 @@ describe("Waltio Metrics", () => {
         totalBuy: 0,
         totalSell: 0,
         pnlRealized: 0,
-        unitPrice: 0,
+        unitPrice: {
+          computed: 0,
+          expected: 0,
+        },
         historic: [],
       });
     });
@@ -192,7 +195,10 @@ describe("Waltio Metrics", () => {
       } as any;
       const result = calculatePnlAndUnitPrice(tokenData);
       expect(result.pnlRealized).toBe(1000);
-      expect(result.unitPrice).toBe(0);
+      expect(result.unitPriceComputed).toBe(0);
+      expect(result.unitPriceExpected
+
+      ).toBe(0);
     });
 
     it("should handle cases where computed quantity is zero", () => {
@@ -202,7 +208,8 @@ describe("Waltio Metrics", () => {
         quantity: { computed: 0 },
       } as any;
       const result = calculatePnlAndUnitPrice(tokenData);
-      expect(result.unitPrice).toBe(0);
+      expect(result.unitPriceComputed).toBe(0);
+      expect(result.unitPriceExpected).toBe(0);
     });
   });
 
