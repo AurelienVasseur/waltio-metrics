@@ -36,20 +36,20 @@ describe("Waltio Service", () => {
   describe("getTransactions", () => {
     it("SHOULD return the transactions", async () => {
       const rows = await getRowsExportWaltio();
-      const transactions = await WaltioService.getTransactions(rows);
+      const transactions = WaltioService.getTransactions(rows);
       expect(transactions).toEqual(expectedTransactions);
     });
 
     it("SHOULD sort and return the transactions", async () => {
       const rows = await getRowsExportWaltioUnsorted();
-      const transactions = await WaltioService.getTransactions(rows);
+      const transactions = WaltioService.getTransactions(rows);
       expect(transactions).toEqual(expectedTransactions);
     });
 
     it("SHOULD raise an error if the transactions are not well formatted", async () => {
       const rows = await getRowsExportWaltioInvalid();
       try {
-        await WaltioService.getTransactions(rows);
+        WaltioService.getTransactions(rows);
         fail();
       } catch (error: any) {
         expect(error.message).toEqual(

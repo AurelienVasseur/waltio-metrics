@@ -9,7 +9,7 @@ export default class WaltioService {
    * @param rows Rows loaded from the Waltio export file
    * @returns Extract and sort transactions from a Waltio export file (xlsx file)
    */
-  static async getTransactions(rows: Row[]) {
+  static getTransactions(rows: Row[]): Transaction[] {
     // Extract transactions
     const transactions = rows.map((row): Transaction => {
       const getAmount = (value: string) =>

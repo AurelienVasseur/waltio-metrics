@@ -10,17 +10,17 @@ export default class TransactionsService {
   static getTokens(transactions: Transaction[]) {
     const tokensReceived = [
       ...new Set(
-        transactions.filter((t) => t.tokenReceived).map((t) => t.tokenReceived)
+        transactions.filter((t) => t.tokenReceived).map((t) => t.tokenReceived!)
       ),
     ];
     const tokensSent = [
       ...new Set(
-        transactions.filter((t) => t.tokenSent).map((t) => t.tokenSent)
+        transactions.filter((t) => t.tokenSent).map((t) => t.tokenSent!)
       ),
     ];
     const tokensFees = [
       ...new Set(
-        transactions.filter((t) => t.tokenFees).map((t) => t.tokenFees)
+        transactions.filter((t) => t.tokenFees).map((t) => t.tokenFees!)
       ),
     ];
     return { tokensReceived, tokensSent, tokensFees };
