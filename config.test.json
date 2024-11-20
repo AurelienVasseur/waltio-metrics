@@ -1,6 +1,7 @@
 {
   "filePath": "tests/export_waltio_test.xlsx",
   "fiatTokens": ["USD", "EUR"],
+  "stablecoinTokens": ["USDT", "USDC"],
   "tokenAliases": {
     "MATIC": ["POL", "Polygon"],
     "ETH": ["Ethereum", "Ether"],

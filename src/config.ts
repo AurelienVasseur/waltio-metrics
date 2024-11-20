@@ -11,6 +11,10 @@ interface Config {
    */
   fiatTokens: string[];
   /**
+   * Stablecoin tickers (USDT, USDC, etc.).
+   */
+  stablecoinTokens: string[];
+  /**
    * Define token aliases.
    */
   tokenAliases: Record<string, string[]>;
