@@ -7,6 +7,7 @@ import {
 } from "../../tests/data/transactionsTransactionsService";
 import TransactionsService from "./transactions.service";
 import { Transaction } from "../types/transaction";
+import { config } from "../config";
 
 describe("Transaction Service", () => {
   describe("getTokens", () => {
@@ -1842,6 +1843,231 @@ describe("Transaction Service", () => {
       const isCashOutFor = TransactionsService.isCashOutFor(transaction, "ETH");
       spy.mockRestore();
       expect(isCashOutFor).toBe(false);
+    });
+  });
+
+  describe("generateAliased", () => {
+    it("SHOULD replace token names with their aliases correctly", () => {
+      const transactions: Transaction[] = [
+        {
+          type: "Échange",
+          date: "2024-11-21",
+          timeZone: "GMT+1:00",
+          amountReceived: 10,
+          tokenReceived: "BTC",
+          amountSent: 0.2,
+          tokenSent: "ETH",
+          fees: 0.01,
+          tokenFees: "ETH",
+          platform: "Binance",
+          description: "Trade BTC/ETH",
+          label: "Trade",
+          priceTokenSent: 1500,
+          priceTokenReceived: 50000,
+          priceTokenFees: 1500,
+          address: "0x123...",
+          trasactionHash: "0xabc...",
+          externalId: "tx-001",
+        },
+      ];
+      const aliases = config.tokenAliases;
+      config.tokenAliases = {
+        Bitcoin: ["BTC", "XBT"],
+        Ethereum: ["ETH", "Ether"],
+      };
+      const result = TransactionsService.generateAliased(transactions);
+      expect(result).toEqual([
+        {
+          type: "Échange",
+          date: "2024-11-21",
+          timeZone: "GMT+1:00",
+          amountReceived: 10,
+          tokenReceived: "Bitcoin",
+          amountSent: 0.2,
+          tokenSent: "Ethereum",
+          fees: 0.01,
+          tokenFees: "Ethereum",
+          platform: "Binance",
+          description: "Trade BTC/ETH",
+          label: "Trade",
+          priceTokenSent: 1500,
+          priceTokenReceived: 50000,
+          priceTokenFees: 1500,
+          address: "0x123...",
+          trasactionHash: "0xabc...",
+          externalId: "tx-001",
+        },
+      ]);
+      config.tokenAliases = aliases;
+    });
+
+    it("SHOULD leave transactions unchanged if no aliases match", () => {
+      const transactions: Transaction[] = [
+        {
+          type: "Échange",
+          date: "2024-11-21",
+          timeZone: "GMT+1:00",
+          amountReceived: 10,
+          tokenReceived: "USDT",
+          amountSent: 0.2,
+          tokenSent: "BNB",
+          fees: 0.01,
+          tokenFees: "BNB",
+          platform: "Binance",
+          description: "Trade USDT/BNB",
+          label: "Trade",
+          priceTokenSent: 1500,
+          priceTokenReceived: 50000,
+          priceTokenFees: 1500,
+          address: "0x456...",
+          trasactionHash: "0xdef...",
+          externalId: "tx-002",
+        },
+      ];
+      const aliases = config.tokenAliases;
+      config.tokenAliases = {
+        Bitcoin: ["BTC", "XBT"],
+        Ethereum: ["ETH", "Ether"],
+      };
+      const result = TransactionsService.generateAliased(transactions);
+      expect(result).toEqual(transactions); // Should remain unchanged
+      config.tokenAliases = aliases;
+    });
+
+    it("SHOULD handle empty transactions array", () => {
+      const transactions: Transaction[] = [];
+      const aliases = config.tokenAliases;
+      config.tokenAliases = {
+        Bitcoin: ["BTC", "XBT"],
+        Ethereum: ["ETH", "Ether"],
+      };
+      const result = TransactionsService.generateAliased(transactions);
+      expect(result).toEqual([]); // Should return an empty array
+      config.tokenAliases = aliases;
+    });
+
+    it("SHOULD handle empty alias configuration", () => {
+      const transactions: Transaction[] = [
+        {
+          type: "Échange",
+          date: "2024-11-21",
+          timeZone: "GMT+1:00",
+          amountReceived: 10,
+          tokenReceived: "BTC",
+          amountSent: 0.2,
+          tokenSent: "ETH",
+          fees: 0.01,
+          tokenFees: "ETH",
+          platform: "Binance",
+          description: "Trade BTC/ETH",
+          label: "Trade",
+          priceTokenSent: 1500,
+          priceTokenReceived: 50000,
+          priceTokenFees: 1500,
+          address: "0x123...",
+          trasactionHash: "0xabc...",
+          externalId: "tx-001",
+        },
+      ];
+      const aliases = config.tokenAliases;
+      config.tokenAliases = {};
+      const result = TransactionsService.generateAliased(transactions);
+      expect(result).toEqual(transactions); // Should remain unchanged
+      config.tokenAliases = aliases;
+    });
+
+    it("SHOULD replace tokens in multiple transactions", () => {
+      const transactions: Transaction[] = [
+        {
+          type: "Échange",
+          date: "2024-11-21",
+          timeZone: "GMT+1:00",
+          amountReceived: 10,
+          tokenReceived: "BTC",
+          amountSent: 0.2,
+          tokenSent: "ETH",
+          fees: 0.01,
+          tokenFees: "ETH",
+          platform: "Binance",
+          description: "Trade BTC/ETH",
+          label: "Trade",
+          priceTokenSent: 1500,
+          priceTokenReceived: 50000,
+          priceTokenFees: 1500,
+          address: "0x123...",
+          trasactionHash: "0xabc...",
+          externalId: "tx-001",
+        },
+        {
+          type: "Échange",
+          date: "2024-11-22",
+          timeZone: "GMT+1:00",
+          amountReceived: 5,
+          tokenReceived: "XBT",
+          amountSent: 0.1,
+          tokenSent: "Ether",
+          fees: 0.005,
+          tokenFees: "Ether",
+          platform: "Coinbase",
+          description: "Trade XBT/Ether",
+          label: "Trade",
+          priceTokenSent: 1600,
+          priceTokenReceived: 52000,
+          priceTokenFees: 1600,
+          address: "0x456...",
+          trasactionHash: "0xdef...",
+          externalId: "tx-002",
+        },
+      ];
+      const aliases = config.tokenAliases;
+      config.tokenAliases = {
+        Bitcoin: ["BTC", "XBT"],
+        Ethereum: ["ETH", "Ether"],
+      };
+      const result = TransactionsService.generateAliased(transactions);
+      expect(result).toEqual([
+        {
+          type: "Échange",
+          date: "2024-11-21",
+          timeZone: "GMT+1:00",
+          amountReceived: 10,
+          tokenReceived: "Bitcoin",
+          amountSent: 0.2,
+          tokenSent: "Ethereum",
+          fees: 0.01,
+          tokenFees: "Ethereum",
+          platform: "Binance",
+          description: "Trade BTC/ETH",
+          label: "Trade",
+          priceTokenSent: 1500,
+          priceTokenReceived: 50000,
+          priceTokenFees: 1500,
+          address: "0x123...",
+          trasactionHash: "0xabc...",
+          externalId: "tx-001",
+        },
+        {
+          type: "Échange",
+          date: "2024-11-22",
+          timeZone: "GMT+1:00",
+          amountReceived: 5,
+          tokenReceived: "Bitcoin",
+          amountSent: 0.1,
+          tokenSent: "Ethereum",
+          fees: 0.005,
+          tokenFees: "Ethereum",
+          platform: "Coinbase",
+          description: "Trade XBT/Ether",
+          label: "Trade",
+          priceTokenSent: 1600,
+          priceTokenReceived: 52000,
+          priceTokenFees: 1600,
+          address: "0x456...",
+          trasactionHash: "0xdef...",
+          externalId: "tx-002",
+        },
+      ]);
+      config.tokenAliases = aliases;
     });
   });
 });

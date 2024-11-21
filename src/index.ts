@@ -15,13 +15,18 @@ const main = async () => {
   await cleanOutput(timestamp);
   spinnerClean.succeed(`Output directories created: output/${timestamp}`);
 
-  // Parse transactions
+  // Load transactions
   const spinnerTransaction = ora("Loading transactions").start();
   const path: string = p.resolve(__dirname, `../${config.filePath}`);
   const rows = await getRowsFromExcelFile(path);
   const transactions = WaltioService.getTransactions(rows);
   await save(timestamp, transactions, "transactions");
   spinnerTransaction.succeed(`${transactions.length} transactions loaded`);
+
+  // Generate aliased transactions
+  const spinnerTransactionAliased = ora("Generating aliased transactions").start();
+  // WORK IN PROGRESS...
+  spinnerTransactionAliased.succeed(`${transactions.length} aliased transactions generated`);
 
   // Compute volumes
   const spinnerVolumes = ora("Compute volumes").start();

@@ -303,4 +303,47 @@ export default class TransactionsService {
       ? true
       : false;
   }
+
+  /**
+   * Function to replace token names with their aliases.
+   * @param transactions List of transactions
+   * @returns A list of transactions with the token names replaced by aliases
+   */
+  static generateAliased(transactions: Transaction[]) {
+    // Create a reverse mapping of NAME -> ALIAS for efficient lookup
+    const reverseAliasMap: Record<string, string> = {};
+    for (const [alias, names] of Object.entries(config.tokenAliases)) {
+      names.forEach((name) => {
+        reverseAliasMap[name] = alias; // Map each NAME to its ALIAS
+      });
+    }
+    return transactions.map((transaction) => {
+      // Create a copy of the transaction to avoid mutating the original
+      const updatedTransaction = { ...transaction };
+      // Replace tokens if they exist in the reverseAliasMap
+      if (
+        updatedTransaction.tokenReceived &&
+        reverseAliasMap[updatedTransaction.tokenReceived]
+      ) {
+        updatedTransaction.tokenReceived =
+          reverseAliasMap[updatedTransaction.tokenReceived];
+      }
+      if (
+        updatedTransaction.tokenSent &&
+        reverseAliasMap[updatedTransaction.tokenSent]
+      ) {
+        updatedTransaction.tokenSent =
+          reverseAliasMap[updatedTransaction.tokenSent];
+      }
+      if (
+        updatedTransaction.tokenFees &&
+        reverseAliasMap[updatedTransaction.tokenFees]
+      ) {
+        updatedTransaction.tokenFees =
+          reverseAliasMap[updatedTransaction.tokenFees];
+      }
+
+      return updatedTransaction;
+    });
+  }
 }
