@@ -4,7 +4,7 @@ import {
   transactions,
   ETH_transactions,
   USDT_transactions,
-} from "../../tests/data/transactions_transactionsService";
+} from "../../tests/data/transactionsTransactionsService";
 import TransactionsService from "./transactions.service";
 import { Transaction } from "../types/transaction";
 
@@ -30,7 +30,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1000,
         tokenReceived: "BTC",
         amountSent: 100,
@@ -55,7 +55,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1000,
         tokenReceived: "BTC",
         amountSent: 100,
@@ -80,7 +80,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1000,
         tokenReceived: "BTC",
         amountSent: 100,
@@ -105,7 +105,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1000,
         tokenReceived: "BTC",
         amountSent: 100,
@@ -155,7 +155,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1000,
         tokenReceived: "BTC",
         amountSent: 100,
@@ -180,7 +180,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1000,
         tokenReceived: "BTC",
         amountSent: 100,
@@ -204,7 +204,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1000,
         tokenReceived: "BTC",
         amountSent: 100,
@@ -228,7 +228,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1000,
         tokenReceived: "BTC",
         amountSent: 100,
@@ -252,7 +252,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1000,
         tokenReceived: "BTC",
         amountSent: 100,
@@ -277,7 +277,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1000,
         tokenReceived: "BTC",
         amountSent: 100,
@@ -302,7 +302,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1000,
         tokenReceived: "BTC",
         amountSent: 100,
@@ -326,7 +326,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1000,
         tokenReceived: "BTC",
         amountSent: 100,
@@ -351,7 +351,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Retrait",
         date: "04/05/2024 09:12:35",
-        timeZone: "PST",
+        timeZone: "GMT",
         amountSent: 0.5,
         tokenSent: "BTC",
         fees: 0.0001,
@@ -373,7 +373,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1000,
         amountSent: 100,
         tokenSent: "ETH",
@@ -397,7 +397,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         tokenReceived: "BTC",
         amountSent: 100,
         tokenSent: "ETH",
@@ -421,7 +421,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1000,
         tokenReceived: "BTC",
         amountSent: 100,
@@ -447,7 +447,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1000,
         tokenReceived: "BTC",
         amountSent: 100,
@@ -472,7 +472,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1000,
         tokenReceived: "BTC",
         amountSent: 100,
@@ -500,7 +500,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Retrait",
         date: "04/05/2024 09:12:35",
-        timeZone: "PST",
+        timeZone: "GMT",
         amountSent: 0.5,
         tokenSent: "BTC",
         fees: 0.0001,
@@ -524,7 +524,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1000,
         tokenReceived: "BTC",
         amountSent: 100,
@@ -549,7 +549,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Dépôt",
         date: "03/10/2024 14:15:20",
-        timeZone: "CET",
+        timeZone: "GMT",
         amountReceived: 500,
         tokenReceived: "EGLD",
         platform: "Coinbase",
@@ -568,7 +568,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1000,
         tokenReceived: "BTC",
         amountSent: 100,
@@ -592,7 +592,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1000,
         tokenReceived: "BTC",
         tokenSent: "ETH",
@@ -616,7 +616,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1000,
         tokenReceived: "BTC",
         amountSent: 100,
@@ -642,7 +642,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1000,
         tokenReceived: "BTC",
         amountSent: 100,
@@ -667,7 +667,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1000,
         tokenReceived: "BTC",
         amountSent: 100,
@@ -692,7 +692,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Dépôt",
         date: "03/10/2024 14:15:20",
-        timeZone: "CET",
+        timeZone: "GMT",
         amountReceived: 500,
         tokenReceived: "EGLD",
         platform: "Coinbase",
@@ -713,7 +713,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1000,
         tokenReceived: "BTC",
         amountSent: 100,
@@ -738,7 +738,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountSent: 100,
         tokenSent: "ETH",
         fees: 0.01,
@@ -760,7 +760,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1000,
         tokenReceived: "BTC",
         fees: 0.01,
@@ -782,7 +782,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Dépôt",
         date: "03/10/2024 14:15:20",
-        timeZone: "CET",
+        timeZone: "GMT",
         amountReceived: 500,
         tokenReceived: "EGLD",
         platform: "Coinbase",
@@ -801,7 +801,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Dépôt",
         date: "03/10/2024 14:15:20",
-        timeZone: "CET",
+        timeZone: "GMT",
         platform: "Coinbase",
         description: "Achat MultiversX",
         label: "Achat de crypto",
@@ -817,7 +817,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Dépôt",
         date: "03/10/2024 14:15:20",
-        timeZone: "CET",
+        timeZone: "GMT",
         amountReceived: 500,
         tokenReceived: "EGLD",
         platform: "Coinbase",
@@ -836,7 +836,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Retrait",
         date: "04/05/2024 09:12:35",
-        timeZone: "PST",
+        timeZone: "GMT",
         amountSent: 0.5,
         tokenSent: "BTC",
         fees: 0.0001,
@@ -861,7 +861,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1000,
         tokenReceived: "BTC",
         amountSent: 100,
@@ -888,7 +888,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1000,
         tokenReceived: "EGLD",
         amountSent: 100,
@@ -915,7 +915,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Dépôt",
         date: "03/10/2024 14:15:20",
-        timeZone: "CET",
+        timeZone: "GMT",
         amountReceived: 500,
         tokenReceived: "EGLD",
         platform: "Coinbase",
@@ -937,7 +937,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1000,
         tokenReceived: "BTC",
         amountSent: 100,
@@ -962,7 +962,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountSent: 100,
         tokenSent: "ETH",
         fees: 0.01,
@@ -984,7 +984,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1000,
         tokenReceived: "BTC",
         fees: 0.01,
@@ -1006,7 +1006,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Dépôt",
         date: "06/10/2024 08:33:12",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1500,
         tokenReceived: "BNB",
         platform: "Binance",
@@ -1025,7 +1025,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Retrait",
         date: "07/18/2024 11:22:45",
-        timeZone: "CET",
+        timeZone: "GMT",
         amountSent: 1000,
         tokenSent: "USDT",
         fees: 10,
@@ -1050,7 +1050,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1000,
         tokenReceived: "BTC",
         amountSent: 100,
@@ -1077,7 +1077,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1000,
         tokenReceived: "BTC",
         amountSent: 100,
@@ -1106,7 +1106,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Dépôt",
         date: "03/10/2024 14:15:20",
-        timeZone: "CET",
+        timeZone: "GMT",
         amountReceived: 500,
         tokenReceived: "EGLD",
         platform: "Coinbase",
@@ -1128,7 +1128,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1000,
         tokenReceived: "BTC",
         amountSent: 100,
@@ -1153,7 +1153,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1000,
         tokenReceived: "BTC",
         amountSent: 100,
@@ -1178,7 +1178,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Retrait",
         date: "04/05/2024 09:12:35",
-        timeZone: "PST",
+        timeZone: "GMT",
         amountSent: 0.5,
         tokenSent: "BTC",
         fees: 0.0001,
@@ -1205,7 +1205,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1000,
         tokenReceived: "BTC",
         amountSent: 100,
@@ -1237,7 +1237,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1000,
         tokenReceived: "BTC",
         amountSent: 100,
@@ -1269,7 +1269,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Dépôt",
         date: "03/10/2024 14:15:20",
-        timeZone: "CET",
+        timeZone: "GMT",
         amountReceived: 500,
         tokenReceived: "EGLD",
         platform: "Coinbase",
@@ -1294,7 +1294,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1000,
         tokenReceived: "USDT",
         amountSent: 100,
@@ -1319,7 +1319,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1000,
         tokenReceived: "BTC",
         amountSent: 100,
@@ -1344,7 +1344,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Dépôt",
         date: "09/01/2024 10:40:00",
-        timeZone: "CET",
+        timeZone: "GMT",
         amountReceived: 2000,
         tokenReceived: "ETH",
         platform: "Coinbase",
@@ -1363,7 +1363,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Retrait",
         date: "10/07/2024 15:30:55",
-        timeZone: "EST",
+        timeZone: "GMT",
         amountSent: 5,
         tokenSent: "BNB",
         fees: 0.01,
@@ -1390,7 +1390,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1000,
         tokenReceived: "USDT",
         amountSent: 100,
@@ -1422,7 +1422,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1000,
         tokenReceived: "USDT",
         amountSent: 100,
@@ -1454,7 +1454,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1000,
         tokenReceived: "BNB",
         amountSent: 100,
@@ -1485,7 +1485,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Dépôt",
         date: "03/10/2024 14:15:20",
-        timeZone: "CET",
+        timeZone: "GMT",
         amountReceived: 500,
         tokenReceived: "EGLD",
         platform: "Coinbase",
@@ -1504,7 +1504,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Dépôt",
         date: "03/10/2024 14:15:20",
-        timeZone: "CET",
+        timeZone: "GMT",
         amountReceived: 500,
         tokenReceived: "EGLD",
         platform: "Coinbase",
@@ -1523,7 +1523,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1000,
         tokenReceived: "BTC",
         amountSent: 100,
@@ -1548,7 +1548,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1000,
         tokenReceived: "BTC",
         amountSent: 100,
@@ -1573,7 +1573,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Retrait",
         date: "04/05/2024 09:12:35",
-        timeZone: "PST",
+        timeZone: "GMT",
         amountSent: 0.5,
         tokenSent: "BTC",
         fees: 0.0001,
@@ -1600,7 +1600,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Dépôt",
         date: "03/10/2024 14:15:20",
-        timeZone: "CET",
+        timeZone: "GMT",
         amountReceived: 500,
         tokenReceived: "EGLD",
         platform: "Coinbase",
@@ -1623,7 +1623,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Dépôt",
         date: "03/10/2024 14:15:20",
-        timeZone: "CET",
+        timeZone: "GMT",
         amountReceived: 500,
         tokenReceived: "BTC",
         platform: "Coinbase",
@@ -1646,7 +1646,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Dépôt",
         date: "03/10/2024 14:15:20",
-        timeZone: "CET",
+        timeZone: "GMT",
         amountReceived: 500,
         tokenReceived: "EGLD",
         platform: "Coinbase",
@@ -1668,7 +1668,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1000,
         tokenReceived: "USD",
         amountSent: 100,
@@ -1693,7 +1693,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1000,
         tokenReceived: "BTC",
         amountSent: 100,
@@ -1718,7 +1718,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Dépôt",
         date: "09/01/2024 10:40:00",
-        timeZone: "CET",
+        timeZone: "GMT",
         amountReceived: 2000,
         tokenReceived: "ETH",
         platform: "Coinbase",
@@ -1737,7 +1737,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Retrait",
         date: "10/07/2024 15:30:55",
-        timeZone: "EST",
+        timeZone: "GMT",
         amountSent: 5,
         tokenSent: "BNB",
         fees: 0.01,
@@ -1764,7 +1764,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1000,
         tokenReceived: "USD",
         amountSent: 100,
@@ -1793,7 +1793,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1000,
         tokenReceived: "USD",
         amountSent: 100,
@@ -1822,7 +1822,7 @@ describe("Transaction Service", () => {
       const transaction: Transaction = {
         type: "Échange",
         date: "02/24/2024 12:29:09",
-        timeZone: "UTC",
+        timeZone: "GMT",
         amountReceived: 1000,
         tokenReceived: "BNB",
         amountSent: 100,

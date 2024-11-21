@@ -4,7 +4,7 @@ const transactions: Transaction[] = [
   {
     type: "Échange",
     date: "02/24/2024 12:29:09",
-    timeZone: "UTC",
+    timeZone: "GMT",
     amountReceived: 1000,
     tokenReceived: "BTC",
     amountSent: 100,
@@ -24,7 +24,7 @@ const transactions: Transaction[] = [
   {
     type: "Dépôt",
     date: "03/10/2024 14:15:20",
-    timeZone: "CET",
+    timeZone: "GMT",
     amountReceived: 500,
     tokenReceived: "USDT",
     platform: "Coinbase",
@@ -38,7 +38,7 @@ const transactions: Transaction[] = [
   {
     type: "Retrait",
     date: "04/05/2024 09:12:35",
-    timeZone: "PST",
+    timeZone: "GMT",
     amountSent: 0.5,
     tokenSent: "BTC",
     fees: 0.0001,
@@ -55,7 +55,7 @@ const transactions: Transaction[] = [
   {
     type: "Échange",
     date: "05/20/2024 17:45:50",
-    timeZone: "EST",
+    timeZone: "GMT",
     amountReceived: 2,
     tokenReceived: "ETH",
     amountSent: 1,
@@ -75,7 +75,7 @@ const transactions: Transaction[] = [
   {
     type: "Dépôt",
     date: "06/10/2024 08:33:12",
-    timeZone: "UTC",
+    timeZone: "GMT",
     amountReceived: 1500,
     tokenReceived: "BNB",
     platform: "Binance",
@@ -89,7 +89,7 @@ const transactions: Transaction[] = [
   {
     type: "Retrait",
     date: "07/18/2024 11:22:45",
-    timeZone: "CET",
+    timeZone: "GMT",
     amountSent: 1000,
     tokenSent: "USDT",
     fees: 10,
@@ -106,7 +106,7 @@ const transactions: Transaction[] = [
   {
     type: "Échange",
     date: "08/15/2024 19:50:20",
-    timeZone: "PST",
+    timeZone: "GMT",
     amountReceived: 500,
     tokenReceived: "ADA",
     amountSent: 1000,
@@ -126,7 +126,7 @@ const transactions: Transaction[] = [
   {
     type: "Dépôt",
     date: "09/01/2024 10:40:00",
-    timeZone: "CET",
+    timeZone: "GMT",
     amountReceived: 2000,
     tokenReceived: "ETH",
     platform: "Coinbase",
@@ -140,7 +140,7 @@ const transactions: Transaction[] = [
   {
     type: "Retrait",
     date: "10/07/2024 15:30:55",
-    timeZone: "EST",
+    timeZone: "GMT",
     amountSent: 5,
     tokenSent: "BNB",
     fees: 0.01,
@@ -157,7 +157,7 @@ const transactions: Transaction[] = [
   {
     type: "Échange",
     date: "11/25/2024 21:05:10",
-    timeZone: "UTC",
+    timeZone: "GMT",
     amountReceived: 100,
     tokenReceived: "XRP",
     amountSent: 0.5,
@@ -180,7 +180,7 @@ const ETH_transactions: Transaction[] = [
   {
     type: "Échange",
     date: "02/24/2024 12:29:09",
-    timeZone: "UTC",
+    timeZone: "GMT",
     amountReceived: 1000,
     tokenReceived: "BTC",
     amountSent: 100,
@@ -201,7 +201,7 @@ const ETH_transactions: Transaction[] = [
   {
     type: "Échange",
     date: "05/20/2024 17:45:50",
-    timeZone: "EST",
+    timeZone: "GMT",
     amountReceived: 2,
     tokenReceived: "ETH",
     amountSent: 1,
@@ -222,7 +222,7 @@ const ETH_transactions: Transaction[] = [
   {
     type: "Dépôt",
     date: "09/01/2024 10:40:00",
-    timeZone: "CET",
+    timeZone: "GMT",
     amountReceived: 2000,
     tokenReceived: "ETH",
     platform: "Coinbase",
@@ -236,7 +236,7 @@ const ETH_transactions: Transaction[] = [
   {
     type: "Échange",
     date: "11/25/2024 21:05:10",
-    timeZone: "UTC",
+    timeZone: "GMT",
     amountReceived: 100,
     tokenReceived: "XRP",
     amountSent: 0.5,
@@ -259,7 +259,7 @@ const USDT_transactions: Transaction[] = [
   {
     type: "Dépôt",
     date: "03/10/2024 14:15:20",
-    timeZone: "CET",
+    timeZone: "GMT",
     amountReceived: 500,
     tokenReceived: "USDT",
     platform: "Coinbase",
@@ -273,7 +273,7 @@ const USDT_transactions: Transaction[] = [
   {
     type: "Retrait",
     date: "07/18/2024 11:22:45",
-    timeZone: "CET",
+    timeZone: "GMT",
     amountSent: 1000,
     tokenSent: "USDT",
     fees: 10,

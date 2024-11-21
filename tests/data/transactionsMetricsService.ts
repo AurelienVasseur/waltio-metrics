@@ -4,7 +4,7 @@ const transactions: Transaction[] = [
   {
     type: "Dépôt",
     date: "01/20/2024 12:45:10",
-    timeZone: "UTC",
+    timeZone: "GMT",
     amountReceived: 10000,
     tokenReceived: "EUR",
     platform: "Coinbase",
@@ -18,7 +18,7 @@ const transactions: Transaction[] = [
   {
     type: "Échange",
     date: "01/22/2024 10:30:15",
-    timeZone: "UTC",
+    timeZone: "GMT",
     amountReceived: 0.05,
     tokenReceived: "BTC",
     amountSent: 5000,
@@ -38,7 +38,7 @@ const transactions: Transaction[] = [
   {
     type: "Échange",
     date: "01/22/2024 15:54:13",
-    timeZone: "UTC",
+    timeZone: "GMT",
     amountReceived: 1.05,
     tokenReceived: "ETH",
     amountSent: 3675,
@@ -58,7 +58,7 @@ const transactions: Transaction[] = [
   {
     type: "Retrait",
     date: "03/10/2024 11:05:26",
-    timeZone: "UTC",
+    timeZone: "GMT",
     amountSent: 0.75,
     tokenSent: "ETH",
     fees: 0.001,
@@ -75,7 +75,7 @@ const transactions: Transaction[] = [
   {
     type: "Dépôt",
     date: "03/10/2024 11:07:13",
-    timeZone: "UTC",
+    timeZone: "GMT",
     amountReceived: 0.75,
     tokenReceived: "ETH",
     platform: "Ledger",
@@ -89,7 +89,7 @@ const transactions: Transaction[] = [
   {
     type: "Échange",
     date: "05/10/2024 14:23:15",
-    timeZone: "UTC",
+    timeZone: "GMT",
     amountReceived: 4,
     tokenReceived: "EGLD",
     amountSent: 100,
@@ -109,7 +109,7 @@ const transactions: Transaction[] = [
   {
     type: "Échange",
     date: "05/10/2024 15:30:40",
-    timeZone: "UTC",
+    timeZone: "GMT",
     amountReceived: 2,
     tokenReceived: "SOL",
     amountSent: 420,
@@ -129,7 +129,7 @@ const transactions: Transaction[] = [
   {
     type: "Dépôt",
     date: "06/24/2024 09:17:14",
-    timeZone: "UTC",
+    timeZone: "GMT",
     amountReceived: 25000,
     tokenReceived: "EUR",
     platform: "Kraken",
@@ -143,7 +143,7 @@ const transactions: Transaction[] = [
   {
     type: "Échange",
     date: "06/25/2024 15:50:13",
-    timeZone: "UTC",
+    timeZone: "GMT",
     amountReceived: 2.35,
     tokenReceived: "ETH",
     amountSent: 10575,
@@ -163,7 +163,7 @@ const transactions: Transaction[] = [
   {
     type: "Échange",
     date: "06/26/2024 17:30:48",
-    timeZone: "UTC",
+    timeZone: "GMT",
     amountReceived: 150,
     tokenReceived: "EGLD",
     amountSent: 1,
@@ -183,7 +183,7 @@ const transactions: Transaction[] = [
   {
     type: "Échange",
     date: "08/10/2024 12:35:17",
-    timeZone: "UTC",
+    timeZone: "GMT",
     amountReceived: 30000,
     tokenReceived: "EUR",
     amountSent: 0.04,
@@ -203,7 +203,7 @@ const transactions: Transaction[] = [
   {
     type: "Échange",
     date: "08/12/2024 15:50:13",
-    timeZone: "UTC",
+    timeZone: "GMT",
     amountReceived: 106,
     tokenReceived: "USDT",
     amountSent: 100,
@@ -223,7 +223,7 @@ const transactions: Transaction[] = [
   {
     type: "Échange",
     date: "08/13/2024 15:50:13",
-    timeZone: "UTC",
+    timeZone: "GMT",
     amountReceived: 1,
     tokenReceived: "EGLD",
     amountSent: 50,
