@@ -7,30 +7,45 @@ import TransactionsService from "./services/transactions.service";
 import { cleanOutput, generateUniqueTimestamp, save } from "./utils/jsonUtils";
 
 const main = async () => {
+  const ora = (await import("ora")).default;
+
+  // Prepare output directories
+  const spinnerClean = ora("Preparing output directories").start();
   const timestamp = generateUniqueTimestamp();
   await cleanOutput(timestamp);
+  spinnerClean.succeed(`Output directories created: output/${timestamp}`);
 
   // Parse transactions
+  const spinnerTransaction = ora("Loading transactions").start();
   const path: string = p.resolve(__dirname, `../${config.filePath}`);
   const rows = await getRowsFromExcelFile(path);
   const transactions = WaltioService.getTransactions(rows);
-  
-  // Compute metrics
+  await save(timestamp, transactions, "transactions");
+  spinnerTransaction.succeed(`${transactions.length} transactions loaded`);
+
+  // Compute volumes
+  const spinnerVolumes = ora("Compute volumes").start();
   const volumes = MetricsService.computeVolumes(transactions);
+  await save(timestamp, volumes, "volumes");
+  spinnerVolumes.succeed("Volumes computed");
+
+  // Retrieve tokens
+  const spinnerTokens = ora("Retrieving tokens").start();
   const tokens = TransactionsService.getTokens(transactions);
-
-  save(timestamp, transactions, "transactions");
-  save(timestamp, volumes, "volumes");
-  save(timestamp, tokens, "tokens");
-
   const tokensMerged = [
     ...new Set([
       ...tokens.tokensReceived,
       ...tokens.tokensSent,
       ...tokens.tokensFees,
     ]),
-  ];
-  tokensMerged.map((token) => {
+  ].sort((a, b) => a.localeCompare(b));
+  await save(timestamp, tokens, "tokens");
+  spinnerTokens.succeed(`${tokensMerged.length} tokens retrieved`);
+
+  // Compute metrics
+  const spinnerMetrics = ora("Computing metrics").start();
+  for (const token of tokensMerged) {
+    spinnerMetrics.text = `Token ${token}`;
     const tokenTransactions = TransactionsService.getTokenTransactions(
       transactions,
       token
@@ -39,9 +54,16 @@ const main = async () => {
       transactions,
       token
     );
-    save(timestamp, tokenTransactions, token, "transactions");
-    save(timestamp, tokenMetrics, token, "metrics");
-  });
+    await save(timestamp, tokenTransactions, token, "transactions");
+    await save(timestamp, tokenMetrics, token, "metrics");
+    // Add a small timeout to make logs readable
+    await new Promise<void>((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, 100);
+    });
+  }
+  spinnerMetrics.succeed("Metrics computed");
 };
 
 main().then();
