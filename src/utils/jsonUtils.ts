@@ -67,7 +67,7 @@ async function prepareDirectory(path: string, removeContent: boolean) {
  */
 export async function cleanOutput(timestamp: string) {
   try {
-    const outputPath = p.join(__dirname, "../../output-test");
+    const outputPath = p.join(__dirname, "../../output");
     const timestampPath = p.join(outputPath, timestamp);
     const transactionsPath = p.join(timestampPath, "transactions");
     const metricsPath = p.join(timestampPath, "metrics");
@@ -102,7 +102,7 @@ export async function save(
     const subpath = sub ? `${sub}/${securedFileName}` : securedFileName;
     const path = p.join(
       __dirname,
-      `../../output-test/${timestamp}/${subpath}.json`
+      `../../output/${timestamp}/${subpath}.json`
     );
 
     const json = JSON.stringify(obj, null, 2);
