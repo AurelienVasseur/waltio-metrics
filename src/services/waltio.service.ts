@@ -32,7 +32,7 @@ export default class WaltioService {
         priceTokenReceived: getAmount(getCellValue(row, 14)),
         priceTokenFees: getAmount(getCellValue(row, 15)),
         address: getCellValue(row, 16),
-        trasactionHash: getCellValue(row, 17),
+        transactionHash: getCellValue(row, 17),
         externalId: getCellValue(row, 18),
       };
     });

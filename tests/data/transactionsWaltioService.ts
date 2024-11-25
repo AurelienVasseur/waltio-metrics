@@ -18,7 +18,7 @@ const transactions: Transaction[] = [
     priceTokenReceived: undefined,
     priceTokenFees: undefined,
     address: "",
-    trasactionHash: "",
+    transactionHash: "",
     externalId: "ext-id-1",
   },
   {
@@ -38,7 +38,7 @@ const transactions: Transaction[] = [
     priceTokenReceived: 4000,
     priceTokenFees: 4000,
     address: "",
-    trasactionHash: "",
+    transactionHash: "",
     externalId: "ext-id-2",
   },
   {
@@ -58,7 +58,7 @@ const transactions: Transaction[] = [
     priceTokenReceived: 50000,
     priceTokenFees: 50000,
     address: "",
-    trasactionHash: "",
+    transactionHash: "",
     externalId: "ext-id-3",
   },
   {
@@ -78,7 +78,7 @@ const transactions: Transaction[] = [
     priceTokenReceived: 140,
     priceTokenFees: undefined,
     address: "adr-1",
-    trasactionHash: "tx-hash-1",
+    transactionHash: "tx-hash-1",
     externalId: "ext-id-4",
   },
   {
@@ -98,7 +98,7 @@ const transactions: Transaction[] = [
     priceTokenReceived: 21.6,
     priceTokenFees: 135,
     address: "",
-    trasactionHash: "",
+    transactionHash: "",
     externalId: "ext-id-5",
   },
   {
@@ -118,7 +118,7 @@ const transactions: Transaction[] = [
     priceTokenReceived: 25,
     priceTokenFees: 1,
     address: "",
-    trasactionHash: "",
+    transactionHash: "",
     externalId: "ext-id-6",
   },
   {
@@ -138,7 +138,7 @@ const transactions: Transaction[] = [
     priceTokenReceived: 1.002,
     priceTokenFees: 5000,
     address: "",
-    trasactionHash: "",
+    transactionHash: "",
     externalId: "ext-id-7",
   },
   {
@@ -158,7 +158,7 @@ const transactions: Transaction[] = [
     priceTokenReceived: undefined,
     priceTokenFees: 0.9993,
     address: "adr-2",
-    trasactionHash: "tx-hash-2",
+    transactionHash: "tx-hash-2",
     externalId: "ext-id-8",
   },
   {
@@ -178,7 +178,7 @@ const transactions: Transaction[] = [
     priceTokenReceived: 0.9993,
     priceTokenFees: undefined,
     address: "adr-2",
-    trasactionHash: "tx-hash-2",
+    transactionHash: "tx-hash-2",
     externalId: "",
   },
   {
@@ -198,7 +198,7 @@ const transactions: Transaction[] = [
     priceTokenReceived: 1.11,
     priceTokenFees: 690,
     address: "",
-    trasactionHash: "",
+    transactionHash: "",
     externalId: "ext-id-9",
   },
   {
@@ -218,7 +218,7 @@ const transactions: Transaction[] = [
     priceTokenReceived: 1,
     priceTokenFees: 1,
     address: "",
-    trasactionHash: "",
+    transactionHash: "",
     externalId: "ext-id-10",
   },
   {
@@ -238,7 +238,7 @@ const transactions: Transaction[] = [
     priceTokenReceived: 0.5,
     priceTokenFees: 1,
     address: "",
-    trasactionHash: "",
+    transactionHash: "",
     externalId: "ext-id-11",
   },
   {
@@ -258,7 +258,7 @@ const transactions: Transaction[] = [
     priceTokenReceived: 0.5,
     priceTokenFees: 1,
     address: "",
-    trasactionHash: "",
+    transactionHash: "",
     externalId: "ext-id-12",
   },
   {
@@ -278,7 +278,7 @@ const transactions: Transaction[] = [
     priceTokenReceived: 1,
     priceTokenFees: 0.5,
     address: "",
-    trasactionHash: "",
+    transactionHash: "",
     externalId: "ext-id-13",
   },
 ];

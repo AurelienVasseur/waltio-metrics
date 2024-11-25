@@ -45,7 +45,7 @@ describe("Transaction Service", () => {
         priceTokenReceived: 40000,
         priceTokenFees: 1500,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const isRelatedTo = TransactionsService.isRelatedTo(transaction, "BTC");
@@ -70,7 +70,7 @@ describe("Transaction Service", () => {
         priceTokenReceived: 40000,
         priceTokenFees: 1500,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const isRelatedTo = TransactionsService.isRelatedTo(transaction, "ETH");
@@ -95,7 +95,7 @@ describe("Transaction Service", () => {
         priceTokenReceived: 40000,
         priceTokenFees: 1500,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const isRelatedTo = TransactionsService.isRelatedTo(transaction, "USDT");
@@ -120,7 +120,7 @@ describe("Transaction Service", () => {
         priceTokenReceived: 40000,
         priceTokenFees: 1500,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const isRelatedTo = TransactionsService.isRelatedTo(transaction, "EGLD");
@@ -170,7 +170,7 @@ describe("Transaction Service", () => {
         priceTokenReceived: 40000,
         priceTokenFees: 1500,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const hasFees = TransactionsService.hasFees(transaction);
@@ -194,7 +194,7 @@ describe("Transaction Service", () => {
         priceTokenReceived: 40000,
         priceTokenFees: 1500,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const hasFees = TransactionsService.hasFees(transaction);
@@ -218,7 +218,7 @@ describe("Transaction Service", () => {
         priceTokenSent: 2000,
         priceTokenReceived: 40000,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const hasFees = TransactionsService.hasFees(transaction);
@@ -240,7 +240,7 @@ describe("Transaction Service", () => {
         priceTokenSent: 2000,
         priceTokenReceived: 40000,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const hasFees = TransactionsService.hasFees(transaction);
@@ -267,7 +267,7 @@ describe("Transaction Service", () => {
         priceTokenReceived: 40000,
         priceTokenFees: 1500,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const hasFeesFor = TransactionsService.hasFeesFor(transaction, "USDT");
@@ -292,7 +292,7 @@ describe("Transaction Service", () => {
         priceTokenReceived: 40000,
         priceTokenFees: 1500,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const hasFeesFor = TransactionsService.hasFeesFor(transaction, "ETH");
@@ -314,7 +314,7 @@ describe("Transaction Service", () => {
         priceTokenSent: 2000,
         priceTokenReceived: 40000,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const hasFeesFor = TransactionsService.hasFeesFor(transaction, "ETH");
@@ -341,7 +341,7 @@ describe("Transaction Service", () => {
         priceTokenReceived: 40000,
         priceTokenFees: 1500,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const isReceive = TransactionsService.isReceive(transaction);
@@ -363,7 +363,7 @@ describe("Transaction Service", () => {
         priceTokenSent: 45000,
         priceTokenFees: 45000,
         address: "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa",
-        trasactionHash: "0xabcdef0987fedcba",
+        transactionHash: "0xabcdef0987fedcba",
         externalId: "ext67890",
       };
       const isReceive = TransactionsService.isReceive(transaction);
@@ -387,7 +387,7 @@ describe("Transaction Service", () => {
         priceTokenReceived: 40000,
         priceTokenFees: 1500,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const isReceive = TransactionsService.isReceive(transaction);
@@ -411,7 +411,7 @@ describe("Transaction Service", () => {
         priceTokenReceived: 40000,
         priceTokenFees: 1500,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const isReceive = TransactionsService.isReceive(transaction);
@@ -435,7 +435,7 @@ describe("Transaction Service", () => {
         priceTokenSent: 2000,
         priceTokenFees: 1500,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const isReceive = TransactionsService.isReceive(transaction);
@@ -462,7 +462,7 @@ describe("Transaction Service", () => {
         priceTokenReceived: 40000,
         priceTokenFees: 1500,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const isReceiveFor = TransactionsService.isReceiveFor(transaction, "BTC");
@@ -487,7 +487,7 @@ describe("Transaction Service", () => {
         priceTokenReceived: 40000,
         priceTokenFees: 1500,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const isReceiveFor = TransactionsService.isReceiveFor(
@@ -512,7 +512,7 @@ describe("Transaction Service", () => {
         priceTokenSent: 45000,
         priceTokenFees: 45000,
         address: "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa",
-        trasactionHash: "0xabcdef0987fedcba",
+        transactionHash: "0xabcdef0987fedcba",
         externalId: "ext67890",
       };
       const isReceiveFor = TransactionsService.isReceiveFor(transaction, "BTC");
@@ -539,7 +539,7 @@ describe("Transaction Service", () => {
         priceTokenReceived: 40000,
         priceTokenFees: 1500,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const isSend = TransactionsService.isSend(transaction);
@@ -558,7 +558,7 @@ describe("Transaction Service", () => {
         label: "Achat de crypto",
         priceTokenReceived: 26,
         address: "0xabcdef0987654321",
-        trasactionHash: "0x0987654321abcdef",
+        transactionHash: "0x0987654321abcdef",
         externalId: "ext54321",
       };
       const isSend = TransactionsService.isSend(transaction);
@@ -582,7 +582,7 @@ describe("Transaction Service", () => {
         priceTokenReceived: 40000,
         priceTokenFees: 1500,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const isSend = TransactionsService.isSend(transaction);
@@ -606,7 +606,7 @@ describe("Transaction Service", () => {
         priceTokenReceived: 40000,
         priceTokenFees: 1500,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const isSend = TransactionsService.isSend(transaction);
@@ -630,7 +630,7 @@ describe("Transaction Service", () => {
         priceTokenReceived: 40000,
         priceTokenFees: 1500,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const isSend = TransactionsService.isSend(transaction);
@@ -657,7 +657,7 @@ describe("Transaction Service", () => {
         priceTokenReceived: 40000,
         priceTokenFees: 1500,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const isSendFor = TransactionsService.isSendFor(transaction, "ETH");
@@ -682,7 +682,7 @@ describe("Transaction Service", () => {
         priceTokenReceived: 40000,
         priceTokenFees: 1500,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const isSendFor = TransactionsService.isSendFor(transaction, "BTC");
@@ -701,7 +701,7 @@ describe("Transaction Service", () => {
         label: "Achat de crypto",
         priceTokenReceived: 26,
         address: "0xabcdef0987654321",
-        trasactionHash: "0x0987654321abcdef",
+        transactionHash: "0x0987654321abcdef",
         externalId: "ext54321",
       };
       const isSendFor = TransactionsService.isSendFor(transaction, "ETH");
@@ -728,7 +728,7 @@ describe("Transaction Service", () => {
         priceTokenReceived: 40000,
         priceTokenFees: 1500,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const isBuy = TransactionsService.isBuy(transaction);
@@ -750,7 +750,7 @@ describe("Transaction Service", () => {
         priceTokenSent: 2000,
         priceTokenFees: 1500,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const isBuy = TransactionsService.isBuy(transaction);
@@ -772,7 +772,7 @@ describe("Transaction Service", () => {
         priceTokenReceived: 40000,
         priceTokenFees: 1500,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const isBuy = TransactionsService.isBuy(transaction);
@@ -791,7 +791,7 @@ describe("Transaction Service", () => {
         label: "Achat de crypto",
         priceTokenReceived: 26,
         address: "0xabcdef0987654321",
-        trasactionHash: "0x0987654321abcdef",
+        transactionHash: "0x0987654321abcdef",
         externalId: "ext54321",
       };
       const isBuy = TransactionsService.isBuy(transaction);
@@ -807,7 +807,7 @@ describe("Transaction Service", () => {
         description: "Achat MultiversX",
         label: "Achat de crypto",
         address: "0xabcdef0987654321",
-        trasactionHash: "0x0987654321abcdef",
+        transactionHash: "0x0987654321abcdef",
         externalId: "ext54321",
       };
       const isBuy = TransactionsService.isBuy(transaction);
@@ -826,7 +826,7 @@ describe("Transaction Service", () => {
         label: "Transfert entre comptes",
         priceTokenReceived: 26,
         address: "0xabcdef0987654321",
-        trasactionHash: "0x0987654321abcdef",
+        transactionHash: "0x0987654321abcdef",
         externalId: "ext54321",
       };
       const isBuy = TransactionsService.isBuy(transaction);
@@ -848,7 +848,7 @@ describe("Transaction Service", () => {
         priceTokenSent: 45000,
         priceTokenFees: 45000,
         address: "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa",
-        trasactionHash: "0xabcdef0987fedcba",
+        transactionHash: "0xabcdef0987fedcba",
         externalId: "ext67890",
       };
       const isBuy = TransactionsService.isBuy(transaction);
@@ -876,7 +876,7 @@ describe("Transaction Service", () => {
         priceTokenReceived: 40000,
         priceTokenFees: 1500,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const isBuyFor = TransactionsService.isBuyFor(transaction, "BTC");
@@ -903,7 +903,7 @@ describe("Transaction Service", () => {
         priceTokenReceived: 40000,
         priceTokenFees: 1500,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const isBuyFor = TransactionsService.isBuyFor(transaction, "BTC");
@@ -924,7 +924,7 @@ describe("Transaction Service", () => {
         label: "Transfert entre comptes",
         priceTokenReceived: 26,
         address: "0xabcdef0987654321",
-        trasactionHash: "0x0987654321abcdef",
+        transactionHash: "0x0987654321abcdef",
         externalId: "ext54321",
       };
       const isBuyFor = TransactionsService.isBuyFor(transaction, "BTC");
@@ -952,7 +952,7 @@ describe("Transaction Service", () => {
         priceTokenReceived: 40000,
         priceTokenFees: 1500,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const isSell = TransactionsService.isSell(transaction);
@@ -974,7 +974,7 @@ describe("Transaction Service", () => {
         priceTokenSent: 2000,
         priceTokenFees: 1500,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const isSell = TransactionsService.isSell(transaction);
@@ -996,7 +996,7 @@ describe("Transaction Service", () => {
         priceTokenReceived: 40000,
         priceTokenFees: 1500,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const isSell = TransactionsService.isSell(transaction);
@@ -1015,7 +1015,7 @@ describe("Transaction Service", () => {
         label: "Dépôt",
         priceTokenReceived: 300,
         address: "bnb1abcdeffedcba",
-        trasactionHash: "0xabc123fed5679876",
+        transactionHash: "0xabc123fed5679876",
         externalId: "ext55678",
       };
       const isSell = TransactionsService.isSell(transaction);
@@ -1037,7 +1037,7 @@ describe("Transaction Service", () => {
         priceTokenSent: 1,
         priceTokenFees: 1,
         address: "TXYZ1234567890ABCDEF",
-        trasactionHash: "0xabcd1234567890ef",
+        transactionHash: "0xabcd1234567890ef",
         externalId: "ext90909",
       };
       const isSell = TransactionsService.isSell(transaction);
@@ -1065,7 +1065,7 @@ describe("Transaction Service", () => {
         priceTokenReceived: 40000,
         priceTokenFees: 1500,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const isSellFor = TransactionsService.isSellFor(transaction, "ETH");
@@ -1092,7 +1092,7 @@ describe("Transaction Service", () => {
         priceTokenReceived: 40000,
         priceTokenFees: 1500,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const isSellFor = TransactionsService.isSellFor(transaction, "BTC");
@@ -1115,7 +1115,7 @@ describe("Transaction Service", () => {
         label: "Transfert entre comptes",
         priceTokenReceived: 26,
         address: "0xabcdef0987654321",
-        trasactionHash: "0x0987654321abcdef",
+        transactionHash: "0x0987654321abcdef",
         externalId: "ext54321",
       };
       const isSellFor = TransactionsService.isSellFor(transaction, "BTC");
@@ -1143,7 +1143,7 @@ describe("Transaction Service", () => {
         priceTokenReceived: 40000,
         priceTokenFees: 1,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const isStablecoinIn = TransactionsService.isStablecoinIn(transaction);
@@ -1168,7 +1168,7 @@ describe("Transaction Service", () => {
         priceTokenReceived: 40000,
         priceTokenFees: 1,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const isStablecoinIn = TransactionsService.isStablecoinIn(transaction);
@@ -1190,7 +1190,7 @@ describe("Transaction Service", () => {
         priceTokenSent: 45000,
         priceTokenFees: 45000,
         address: "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa",
-        trasactionHash: "0xabcdef0987fedcba",
+        transactionHash: "0xabcdef0987fedcba",
         externalId: "ext67890",
       };
       const isCashIn = TransactionsService.isCashIn(transaction);
@@ -1220,7 +1220,7 @@ describe("Transaction Service", () => {
         priceTokenReceived: 40000,
         priceTokenFees: 1,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const isStablecoinInFor = TransactionsService.isStablecoinInFor(
@@ -1252,7 +1252,7 @@ describe("Transaction Service", () => {
         priceTokenReceived: 40000,
         priceTokenFees: 1,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const isStablecoinInFor = TransactionsService.isStablecoinInFor(
@@ -1278,7 +1278,7 @@ describe("Transaction Service", () => {
         label: "Transfert entre comptes",
         priceTokenReceived: 26,
         address: "0xabcdef0987654321",
-        trasactionHash: "0x0987654321abcdef",
+        transactionHash: "0x0987654321abcdef",
         externalId: "ext54321",
       };
       const isStablecoinInFor = TransactionsService.isStablecoinInFor(
@@ -1309,7 +1309,7 @@ describe("Transaction Service", () => {
         priceTokenReceived: 1,
         priceTokenFees: 1500,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const isStablecoinOut = TransactionsService.isStablecoinOut(transaction);
@@ -1334,7 +1334,7 @@ describe("Transaction Service", () => {
         priceTokenReceived: 40000,
         priceTokenFees: 1500,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const isStablecoinOut = TransactionsService.isStablecoinOut(transaction);
@@ -1353,7 +1353,7 @@ describe("Transaction Service", () => {
         label: "Dépôt",
         priceTokenReceived: 1800,
         address: "0xabcdef1234567890",
-        trasactionHash: "0xeth1234567890abc",
+        transactionHash: "0xeth1234567890abc",
         externalId: "ext20224",
       };
       const isStablecoinOut = TransactionsService.isStablecoinOut(transaction);
@@ -1375,7 +1375,7 @@ describe("Transaction Service", () => {
         priceTokenSent: 300,
         priceTokenFees: 300,
         address: "bnb1fedcba0987654321",
-        trasactionHash: "0x0987bnb1234abcd",
+        transactionHash: "0x0987bnb1234abcd",
         externalId: "ext30334",
       };
       const isStablecoinOut = TransactionsService.isStablecoinOut(transaction);
@@ -1405,7 +1405,7 @@ describe("Transaction Service", () => {
         priceTokenReceived: 1,
         priceTokenFees: 1500,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const isStablecoinOutFor = TransactionsService.isStablecoinOutFor(
@@ -1437,7 +1437,7 @@ describe("Transaction Service", () => {
         priceTokenReceived: 1,
         priceTokenFees: 1500,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const isStablecoinOutFor = TransactionsService.isStablecoinOutFor(
@@ -1469,7 +1469,7 @@ describe("Transaction Service", () => {
         priceTokenReceived: 1,
         priceTokenFees: 1500,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const isStablecoinOutFor = TransactionsService.isStablecoinOutFor(
@@ -1494,7 +1494,7 @@ describe("Transaction Service", () => {
         label: "Achat de crypto",
         priceTokenReceived: 26,
         address: "0xabcdef0987654321",
-        trasactionHash: "0x0987654321abcdef",
+        transactionHash: "0x0987654321abcdef",
         externalId: "ext54321",
       };
       const isCashIn = TransactionsService.isCashIn(transaction);
@@ -1513,7 +1513,7 @@ describe("Transaction Service", () => {
         label: "Transfert entre comptes",
         priceTokenReceived: 26,
         address: "0xabcdef0987654321",
-        trasactionHash: "0x0987654321abcdef",
+        transactionHash: "0x0987654321abcdef",
         externalId: "ext54321",
       };
       const isCashIn = TransactionsService.isCashIn(transaction);
@@ -1538,7 +1538,7 @@ describe("Transaction Service", () => {
         priceTokenReceived: 40000,
         priceTokenFees: 1,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const isCashIn = TransactionsService.isCashIn(transaction);
@@ -1563,7 +1563,7 @@ describe("Transaction Service", () => {
         priceTokenReceived: 40000,
         priceTokenFees: 1,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const isCashIn = TransactionsService.isCashIn(transaction);
@@ -1585,7 +1585,7 @@ describe("Transaction Service", () => {
         priceTokenSent: 45000,
         priceTokenFees: 45000,
         address: "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa",
-        trasactionHash: "0xabcdef0987fedcba",
+        transactionHash: "0xabcdef0987fedcba",
         externalId: "ext67890",
       };
       const isCashIn = TransactionsService.isCashIn(transaction);
@@ -1609,7 +1609,7 @@ describe("Transaction Service", () => {
         label: "Achat de crypto",
         priceTokenReceived: 26,
         address: "0xabcdef0987654321",
-        trasactionHash: "0x0987654321abcdef",
+        transactionHash: "0x0987654321abcdef",
         externalId: "ext54321",
       };
       const isCashInFor = TransactionsService.isCashInFor(transaction, "EGLD");
@@ -1632,7 +1632,7 @@ describe("Transaction Service", () => {
         label: "Achat de crypto",
         priceTokenReceived: 26,
         address: "0xabcdef0987654321",
-        trasactionHash: "0x0987654321abcdef",
+        transactionHash: "0x0987654321abcdef",
         externalId: "ext54321",
       };
       const isCashInFor = TransactionsService.isCashInFor(transaction, "EGLD");
@@ -1655,7 +1655,7 @@ describe("Transaction Service", () => {
         label: "Transfert entre comptes",
         priceTokenReceived: 26,
         address: "0xabcdef0987654321",
-        trasactionHash: "0x0987654321abcdef",
+        transactionHash: "0x0987654321abcdef",
         externalId: "ext54321",
       };
       const isCashInFor = TransactionsService.isCashInFor(transaction, "EGLD");
@@ -1683,7 +1683,7 @@ describe("Transaction Service", () => {
         priceTokenReceived: 1,
         priceTokenFees: 1500,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const isCashOut = TransactionsService.isCashOut(transaction);
@@ -1708,7 +1708,7 @@ describe("Transaction Service", () => {
         priceTokenReceived: 40000,
         priceTokenFees: 1500,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const isCashOut = TransactionsService.isCashOut(transaction);
@@ -1727,7 +1727,7 @@ describe("Transaction Service", () => {
         label: "Dépôt",
         priceTokenReceived: 1800,
         address: "0xabcdef1234567890",
-        trasactionHash: "0xeth1234567890abc",
+        transactionHash: "0xeth1234567890abc",
         externalId: "ext20224",
       };
       const isCashOut = TransactionsService.isCashOut(transaction);
@@ -1749,7 +1749,7 @@ describe("Transaction Service", () => {
         priceTokenSent: 300,
         priceTokenFees: 300,
         address: "bnb1fedcba0987654321",
-        trasactionHash: "0x0987bnb1234abcd",
+        transactionHash: "0x0987bnb1234abcd",
         externalId: "ext30334",
       };
       const isCashOut = TransactionsService.isCashOut(transaction);
@@ -1779,7 +1779,7 @@ describe("Transaction Service", () => {
         priceTokenReceived: 1,
         priceTokenFees: 1500,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const isCashOutFor = TransactionsService.isCashOutFor(transaction, "ETH");
@@ -1808,7 +1808,7 @@ describe("Transaction Service", () => {
         priceTokenReceived: 1,
         priceTokenFees: 1500,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const isCashOutFor = TransactionsService.isCashOutFor(transaction, "ETH");
@@ -1837,7 +1837,7 @@ describe("Transaction Service", () => {
         priceTokenReceived: 1,
         priceTokenFees: 1500,
         address: "0x123456789abcdef",
-        trasactionHash: "0xabcdef1234567890",
+        transactionHash: "0xabcdef1234567890",
         externalId: "ext12345",
       };
       const isCashOutFor = TransactionsService.isCashOutFor(transaction, "ETH");
@@ -1866,7 +1866,7 @@ describe("Transaction Service", () => {
           priceTokenReceived: 50000,
           priceTokenFees: 1500,
           address: "0x123...",
-          trasactionHash: "0xabc...",
+          transactionHash: "0xabc...",
           externalId: "tx-001",
         },
       ];
@@ -1894,7 +1894,7 @@ describe("Transaction Service", () => {
           priceTokenReceived: 50000,
           priceTokenFees: 1500,
           address: "0x123...",
-          trasactionHash: "0xabc...",
+          transactionHash: "0xabc...",
           externalId: "tx-001",
         },
       ]);
@@ -1920,7 +1920,7 @@ describe("Transaction Service", () => {
           priceTokenReceived: 50000,
           priceTokenFees: 1500,
           address: "0x456...",
-          trasactionHash: "0xdef...",
+          transactionHash: "0xdef...",
           externalId: "tx-002",
         },
       ];
@@ -1965,7 +1965,7 @@ describe("Transaction Service", () => {
           priceTokenReceived: 50000,
           priceTokenFees: 1500,
           address: "0x123...",
-          trasactionHash: "0xabc...",
+          transactionHash: "0xabc...",
           externalId: "tx-001",
         },
       ];
@@ -1995,7 +1995,7 @@ describe("Transaction Service", () => {
           priceTokenReceived: 50000,
           priceTokenFees: 1500,
           address: "0x123...",
-          trasactionHash: "0xabc...",
+          transactionHash: "0xabc...",
           externalId: "tx-001",
         },
         {
@@ -2015,7 +2015,7 @@ describe("Transaction Service", () => {
           priceTokenReceived: 52000,
           priceTokenFees: 1600,
           address: "0x456...",
-          trasactionHash: "0xdef...",
+          transactionHash: "0xdef...",
           externalId: "tx-002",
         },
       ];
@@ -2043,7 +2043,7 @@ describe("Transaction Service", () => {
           priceTokenReceived: 50000,
           priceTokenFees: 1500,
           address: "0x123...",
-          trasactionHash: "0xabc...",
+          transactionHash: "0xabc...",
           externalId: "tx-001",
         },
         {
@@ -2063,7 +2063,7 @@ describe("Transaction Service", () => {
           priceTokenReceived: 52000,
           priceTokenFees: 1600,
           address: "0x456...",
-          trasactionHash: "0xdef...",
+          transactionHash: "0xdef...",
           externalId: "tx-002",
         },
       ]);

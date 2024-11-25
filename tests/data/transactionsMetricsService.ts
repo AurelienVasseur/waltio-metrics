@@ -12,7 +12,7 @@ const transactions: Transaction[] = [
     label: "",
     priceTokenReceived: 1.06,
     address: "addr_eur_coinbase",
-    trasactionHash: "0x0987654321abcdef",
+    transactionHash: "0x0987654321abcdef",
     externalId: "ext54321",
   },
   {
@@ -32,7 +32,7 @@ const transactions: Transaction[] = [
     priceTokenReceived: 106000,
     priceTokenFees: 1.06,
     address: "addr_btc_coinbase",
-    trasactionHash: "0xabcdef1234567890",
+    transactionHash: "0xabcdef1234567890",
     externalId: "ext12345",
   },
   {
@@ -52,7 +52,7 @@ const transactions: Transaction[] = [
     priceTokenReceived: 3710,
     priceTokenFees: 1.06,
     address: "addr_eth_coinbase",
-    trasactionHash: "0xabcdef1234567890",
+    transactionHash: "0xabcdef1234567890",
     externalId: "ext12345",
   },
   {
@@ -69,7 +69,7 @@ const transactions: Transaction[] = [
     priceTokenSent: 4000,
     priceTokenFees: 4000,
     address: "addr_eth_coinbase",
-    trasactionHash: "0xabcdef0987fedcba",
+    transactionHash: "0xabcdef0987fedcba",
     externalId: "ext67890",
   },
   {
@@ -83,7 +83,7 @@ const transactions: Transaction[] = [
     label: "",
     priceTokenReceived: 4000,
     address: "addr_eth_ledger",
-    trasactionHash: "0x0987654321abcdef",
+    transactionHash: "0x0987654321abcdef",
     externalId: "ext54321",
   },
   {
@@ -103,7 +103,7 @@ const transactions: Transaction[] = [
     priceTokenReceived: 26.5,
     priceTokenFees: 1.06,
     address: "addr_egld_coinbase",
-    trasactionHash: "0xabcdef1234567890",
+    transactionHash: "0xabcdef1234567890",
     externalId: "ext12345",
   },
   {
@@ -123,7 +123,7 @@ const transactions: Transaction[] = [
     priceTokenReceived: 222.6,
     priceTokenFees: 1.06,
     address: "addr_sol_coinbase",
-    trasactionHash: "0xabcdef1234567890",
+    transactionHash: "0xabcdef1234567890",
     externalId: "ext12345",
   },
   {
@@ -137,7 +137,7 @@ const transactions: Transaction[] = [
     label: "",
     priceTokenReceived: 1.06,
     address: "addr_eur_kraken",
-    trasactionHash: "0x0987654321abcdef",
+    transactionHash: "0x0987654321abcdef",
     externalId: "ext54321",
   },
   {
@@ -157,7 +157,7 @@ const transactions: Transaction[] = [
     priceTokenReceived: 4860,
     priceTokenFees: 1.08,
     address: "addr_eth_kraken",
-    trasactionHash: "0xabcdef1234567890",
+    transactionHash: "0xabcdef1234567890",
     externalId: "ext12345",
   },
   {
@@ -177,7 +177,7 @@ const transactions: Transaction[] = [
     priceTokenReceived: 32.62,
     priceTokenFees: 4893,
     address: "addr_egld_kraken",
-    trasactionHash: "0xabcdef1234567890",
+    transactionHash: "0xabcdef1234567890",
     externalId: "ext12345",
   },
   {
@@ -197,7 +197,7 @@ const transactions: Transaction[] = [
     priceTokenReceived: 1,
     priceTokenFees: 750000,
     address: "addr_eur_kraken",
-    trasactionHash: "0xabcdef1234567890",
+    transactionHash: "0xabcdef1234567890",
     externalId: "ext12345",
   },
   {
@@ -217,7 +217,7 @@ const transactions: Transaction[] = [
     priceTokenReceived: 1,
     priceTokenFees: 1.06,
     address: "addr_usdt_kraken",
-    trasactionHash: "0xabcdef1234567890",
+    transactionHash: "0xabcdef1234567890",
     externalId: "ext12345",
   },
   {
@@ -237,7 +237,7 @@ const transactions: Transaction[] = [
     priceTokenReceived: 50,
     priceTokenFees: 1,
     address: "addr_egld_kraken",
-    trasactionHash: "0xabcdef1234567890",
+    transactionHash: "0xabcdef1234567890",
     externalId: "ext12345",
   }
 ];

@@ -51,7 +51,7 @@ export const TransactionZod = z.object({
   priceTokenReceived: z.number().optional(),
   priceTokenFees: z.number().optional(),
   address: z.string(),
-  trasactionHash: z.string(),
+  transactionHash: z.string(),
   externalId: z.string(),
 });
 
