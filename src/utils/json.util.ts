@@ -69,12 +69,22 @@ export async function cleanOutput(timestamp: string) {
   try {
     const outputPath = p.join(__dirname, "../../output");
     const timestampPath = p.join(outputPath, timestamp);
-    const transactionsPath = p.join(timestampPath, "transactions");
-    const metricsPath = p.join(timestampPath, "metrics");
     await prepareDirectory(outputPath, false);
     await prepareDirectory(timestampPath, true);
-    await prepareDirectory(transactionsPath, true);
-    await prepareDirectory(metricsPath, true);
+    // Raw
+    const rawPath = p.join(timestampPath, "raw");
+    const rawTransactionsPath = p.join(rawPath, "transactions");
+    const rawMetricsPath = p.join(rawPath, "metrics");
+    await prepareDirectory(rawPath, true);
+    await prepareDirectory(rawTransactionsPath, true);
+    await prepareDirectory(rawMetricsPath, true);
+    // Aliased
+    const aliasedPath = p.join(timestampPath, "aliased");
+    const aliasedTransactionsPath = p.join(aliasedPath, "transactions");
+    const aliasedMetricsPath = p.join(aliasedPath, "metrics");
+    await prepareDirectory(aliasedPath, true);
+    await prepareDirectory(aliasedTransactionsPath, true);
+    await prepareDirectory(aliasedMetricsPath, true);
   } catch (error) {
     console.error("Error preparing the output directory:", error);
     throw error;
@@ -86,11 +96,14 @@ export async function cleanOutput(timestamp: string) {
  * @param timestamp Timestamp string
  * @param obj JSON object to save
  * @param fileName File name
+ * @param type "raw" or "aliased"
+ * @param sub Sub directory
  */
 export async function save(
   timestamp: string,
   obj: any,
   fileName: string,
+  type?: "raw" | "aliased",
   sub?: "transactions" | "metrics"
 ) {
   try {
@@ -99,11 +112,8 @@ export async function save(
       .replaceAll(" ", "_")
       .replaceAll(/[\\\/:\*\?"<>\|]/g, "_");
 
-    const subpath = sub ? `${sub}/${securedFileName}` : securedFileName;
-    const path = p.join(
-      __dirname,
-      `../../output/${timestamp}/${subpath}.json`
-    );
+    const subpath = `${type ? type + "/" : ""}${sub ? sub + "/" : ""}${securedFileName}`;
+    const path = p.join(__dirname, `../../output/${timestamp}/${subpath}.json`);
 
     const json = JSON.stringify(obj, null, 2);
     fs.writeFileSync(path, json);

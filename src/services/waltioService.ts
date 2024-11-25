@@ -3,7 +3,7 @@ import {
   TransactionFromWaltio,
   TransactionFromWaltioZod,
 } from "../types/transactionFromWaltio";
-import { getRowsFromExcelFile, getCellValue } from "../utils/excelUtils";
+import { getRowsFromExcelFile, getCellValue } from "../utils/excel.util";
 import { config } from "../config";
 
 export default class WaltioService {

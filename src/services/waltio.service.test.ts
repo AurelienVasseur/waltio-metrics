@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import * as p from "path";
-import { getRowsFromExcelFile } from "../utils/excelUtils";
+import { getRowsFromExcelFile } from "../utils/excel.util";
 import WaltioService from "./waltio.service";
 import { transactions as expectedTransactions } from "../../tests/data/transactionsWaltioService";
 import { fail } from "assert";

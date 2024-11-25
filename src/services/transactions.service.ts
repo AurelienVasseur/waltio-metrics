@@ -12,17 +12,17 @@ export default class TransactionsService {
       ...new Set(
         transactions.filter((t) => t.tokenReceived).map((t) => t.tokenReceived!)
       ),
-    ];
+    ].sort((a, b) => a.localeCompare(b));
     const tokensSent = [
       ...new Set(
         transactions.filter((t) => t.tokenSent).map((t) => t.tokenSent!)
       ),
-    ];
+    ].sort((a, b) => a.localeCompare(b));
     const tokensFees = [
       ...new Set(
         transactions.filter((t) => t.tokenFees).map((t) => t.tokenFees!)
       ),
-    ];
+    ].sort((a, b) => a.localeCompare(b));
     return { tokensReceived, tokensSent, tokensFees };
   }
 
