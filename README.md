@@ -1,8 +1,11 @@
 # Waltio Metrics
 
-This project provides a function to parse and summarize token transactions, specifically designed to handle transactions from Waltio. The main functionality is implemented in TypeScript, and it calculates various properties for each token and group involved in the transactions, including quantities, cash flows, realized profit and loss (PnL), and historical data.
+This project provides a function to parse and summarize token transactions, specifically designed to handle transactions from Waltio. The main functionality is implemented in TypeScript, and it calculates various properties for each token involved in the transactions, including quantities, cash flows, and realized profit and loss (PnL).
 
-Based on the computed metrics, the project also includes a function to estimate the wallet's valuation under different scenarios.
+> **Note**: The prices defined in the transactions exported from Waltio are in **euros**.  
+> Therefore, all metrics calculated by this program (e.g., volumes, prices, etc.) are also in **euros**.
+
+The implementation of this project prioritizes maintainability and ease of understanding over performance optimization, ensuring the code remains accessible and straightforward for future development and maintenance.
 
 ## Table of Contents
 
@@ -10,23 +13,16 @@ Based on the computed metrics, the project also includes a function to estimate 
 - [Installation](#installation)
 - [Usage](#usage)
 - [Configuration](#configuration)
-- [Data Structures](#data-structures)
-  - [Parse Transaction](#parse-transactions)
-    - [QuantityData](#quantitydata)
-    - [TokenData](#tokendata)
-    - [GroupData](#groupdata)
-    - [Result](#result)
-  - [Valuation](#valuation)
-    - [TokenValuation](#tokenValuation)
-    - [ScenarioValuation](#scenarioValuation)
-    - [ValuationsResult](#valuationsResult)
-- [Metrics Calculation Details](#metrics-calculation-details)
-- [Valuation Calculation Details](#valuation-calculation-details)
-- [ChatGPT Assistance](#chatgpt-assistance)
+- [Data Consideration](#data-consideration)
+  - [Metric](#metric)
+  - [Metric Section](#metric-section)
+  - [Volume](#volume)
+  - [Volume Section](#volume-section)
+- [Improvements](#improvements)
 
 ## Overview
 
-The main goal of this project is to parse token transactions and generate an investment summary that includes total fiat invested, total fees, and detailed data for each token and group of tokens. The token data includes computed and expected quantities, cash flows (cash in and cash out), total buy and sell values, realized PnL, unit prices, and historical data tracking changes over time.
+The main goal of this project is to parse token transactions and generate an investment summary that includes total fiat invested, total fees, and detailed data for each token and group of tokens. The token data includes computed and expected quantities, cash flows (cash in and cash out), total buy and sell values, realized PnL, and unit prices.
 
 ## Installation
 
@@ -34,7 +30,7 @@ The main goal of this project is to parse token transactions and generate an inv
 2. Navigate to the project directory
 3. Install the dependencies:
    ```bash
-   npm install
+   pnpm install
    ```
 
 ## Usage
@@ -43,9 +39,9 @@ The main goal of this project is to parse token transactions and generate an inv
 2. Export your transactions from Waltio (`Mon rapport fiscal > Tous les documents > Exports > Exporter`). It must be an Excel file (`.xlsx`).
 3. Create a `data` folder at the root of the project and move the previously exported file inside it.
 4. Start the project:
-```bash
-pnpm start
-```
+   ```bash
+   pnpm start
+   ```
 
 That's it 🥳. All metrics will be saved in the `output` folder.
 
@@ -93,6 +89,22 @@ Tokens considered as Fiat are defined in the `fiatTokens` property in the config
 
 `fiatTokens` plays a crucial role in determining whether a transaction should be classified as an investment or withdrawal of fiat currency. By using it, the application effectively distinguishes between fiat and non-fiat transactions, ensuring accurate calculations of cash investments and withdrawals.
 
+### Stablecoin Tokens
+
+Tokens considered as Stablecoin are defined in the `stablecoinTokens` property in the configuration file:
+
+```json
+{
+  ...
+  "stablecoinTokens": [
+    "USDT",
+    "USDC"
+    // Add other stablecoin tokens here
+  ],
+  ...
+}
+```
+
 ### Token Aliases
 
 The `tokenAliases` configuration is used to map multiple names (aliases) to a single primary token name within the system. This is useful when a token may be known by different names or symbols in different contexts, but you want to treat them as the same entity. For example, if "MATIC" is also referred to as "POL" or "Polygon", `tokenAliases` allows you to define these relationships so that operations involving any of these names are consistently attributed to the primary token "MATIC":
@@ -110,237 +122,130 @@ The `tokenAliases` configuration is used to map multiple names (aliases) to a si
 }
 ```
 
-Original names/aliases used in a transaction are still visible in the transaction details in history.
-
-### Expected Quantities
-
-The expected quantities for specific tokens are defined in the `expectedQuantities` property in the configuration file:
-
-```json
-{
-  ...
-  "expectedQuantities": {
-    "BTC": 0.21,
-    "ETH": 5
-    // Add other tokens and their expected quantities here
-  },
-  ...
-}
-```
-
-The expected quantities are used to calculate the delta and deltaPercent for each token.
-
-### Groups Configuration
-
-Groups of tokens are defined in the `groups` property in the configuration file. Each group is an array of token symbols that are aggregated together for reporting purposes:
-
-```json
-{
-  ...
-  "groups": {
-    "layer_1": ["BTC", "ETH"]
-    // Add other groups and their tokens here
-  }
-  ...
-}
-```
-
-The groups are used to aggregate data across multiple tokens, allowing for a comprehensive view of the performance of related assets.
-
-### Scenarios
-
-Scenarios in the valuation process allow you to assess the potential value of a token or a portfolio under different market conditions or assumptions. They provide a way to compare and analyze how changes in variables, such as market prices or token quantities, impact the overall valuation, helping in strategic decision-making and risk assessment.
-
-```json
-{
-  ...
-  "scenarios": {
-    "Optimistic": {
-      "description": "A scenario where the market is bullish and prices are high.",
-      "prices": {
-        "MATIC": 2.5,
-        "ETH": 3500,
-        "BTC": 60000
-      }
-    },
-    "Pessimistic": {
-      "description": "A scenario where the market is bearish and prices are low.",
-      "prices": {
-        "MATIC": 0.8,
-        "ETH": 1500,
-        "BTC": 30000
-      }
-    }
-    // Add other scenarios here
-  },
-  ...
-}
-```
-
-
-## Data Structures
-
-### Parse Transactions
-
-#### QuantityData
-
-This structure holds the quantity-related data for a token.
-
-- `computed`: The computed quantity based on the transactions.
-- `expected`: The expected quantity (defined in `expectedQuantities.ts`).
-- `delta`: The difference between the computed and expected quantities.
-- `deltaPercent`: The percentage difference between the computed and expected quantities.
-
-#### UnitPriceData
-
-This structure holds the unit price related data for a token.
-
-- `computed`: The unit price based on the computed quantity and the realized PnL.
-- `expected`: The unit price based on the expected quantity and the realized PnL.
-
-#### TokenData
-
-This structure holds the comprehensive data for a token.
-
-- `aliases`: An array containing the name of the token and its aliases.
-- `quantity`: An object of type `QuantityData`.
-- `cashIn`: The total amount of fiat currency invested in the token.
-- `cashOut`: The total amount of fiat currency withdrawn from the token.
-- `totalBuy`: The total value of the token bought.
-- `totalSell`: The total value of the token sold.
-- `pnlRealized`: The realized profit and loss for the token.
-- `unitPrice`: An object of type `UnitPriceData`.
-- `historic`: An array of historical entries, each including:
-  - `quantity`: The computed quantity at that point in time.
-  - `date`: The date of the transaction.
-  - `cashIn`: The total amount of fiat currency invested in the token at that point in time.
-  - `cashInDelta`: The change in `cashIn` compared to the previous entry.
-  - `cashOut`: The total amount of fiat currency withdrawn from the token at that point in time.
-  - `cashOutDelta`: The change in `cashOut` compared to the previous entry.
-  - `totalBuy`: The total value of the token bought at that point in time.
-  - `totalBuyDelta`: The change in `totalBuy` compared to the previous entry.
-  - `totalSell`: The total value of the token sold at that point in time.
-  - `totalSellDelta`: The change in `totalSell` compared to the previous entry.
-  - `pnlRealized`: The realized profit and loss for the token at that point in time.
-  - `transaction`: The transaction details.
-
-#### GroupData
-
-This structure holds the comprehensive data for a group of tokens.
-
-- `tokens`: An array of tokens that belong to the group.
-- `cashIn`: The aggregated cash in for the group.
-- `cashOut`: The aggregated cash out for the group.
-- `totalBuy`: The aggregated total buy value for the group.
-- `totalSell`: The aggregated total sell value for the group.
-- `pnlRealized`: The aggregated realized PnL for the group.
-- `historic`: An array of historical entries, each including:
-  - `date`: The date of the transaction.
-  - `cashIn`: The aggregated cash in for the group at that point in time.
-  - `cashOut`: The aggregated cash out for the group at that point in time.
-  - `totalBuy`: The aggregated total buy value for the group at that point in time.
-  - `totalSell`: The aggregated total sell value for the group at that point in time.
-  - `pnlRealized`: The aggregated realized PnL for the group at that point in time.
-  - `transaction`: The transaction details.
-
-#### Result
-
-This structure holds the overall summary and token data.
-
-- `overview`: An object containing:
-  - `cashIn`: The total cash invested.
-  - `cashOut`: The total cash withdrawn.
-  - `fees`: The total fees paid.
-- `groups`: An object where each key is a group name and the value is an object of type `GroupData`.
-- `tokens`: An object where each key is a token symbol and the value is an object of type `TokenData`.
-
-### Valuation
-
-#### TokenValuation
-
-This structure holds the valuation data for a token under a specific scenario.
-
-- `computed`: The computed valuation of the token based on the given scenario.
-- `expected`: The expected valuation of the token, if expected quantities are defined.
-
-#### ScenarioValuation
-
-This structure holds the valuation data for all tokens under a specific scenario, including the total computed and expected valuations.
-
-- `scenarioName`: The name of the scenario.
-- `scenarioDescription`: A brief description of the scenario.
-- `tokenValuations`: A record object where each key is a token symbol and the value is an object of type `TokenValuation`.
-- `totalComputed`: The total computed valuation for all tokens under the scenario.
-- `totalExpected`: The total expected valuation for all tokens under the scenario, if defined.
-
-#### ValuationsResult
-
-This structure represents the overall valuation result across multiple scenarios.
-
-- An array of objects, each representing a different scenario's valuation, where each object is of type `ScenarioValuation`.
-
-
-## Metrics Calculation Details
-
-- **cashIn**: The total amount of fiat currency invested in a token. Calculated by summing up the value of all relevant "Dépôt" transactions with the label "Achat de crypto" and relevant "Échange" transactions involving USD/EUR as the sent token.
-
-- **cashOut**: The total amount of fiat currency withdrawn from a token. Calculated by summing up the value of all relevant "Échange" transactions where USD/EUR is the received token.
-
-- **totalBuy**: The total value of the token bought. Calculated by summing up the product of "amountReceived" and "priceTokenReceived" for all relevant transactions.
-
-- **totalSell**: The total value of the token sold. Calculated by summing up the product of "amountSent" and "priceTokenSent" for all relevant transactions.
-
-- **pnlRealized**: The realized profit and loss. Calculated as "totalSell" - "totalBuy".
-
-- **unitPrice**: 
-  - **computed**: The unit price required for the realized PnL to be zero based on the computed quantity. Calculated as "abs(pnlRealized) / quantity.computed" if "quantity.computed" is not zero and "pnlRealized" is not positive; otherwise, it is set to zero.
-  - **expected**: The unit price required for the realized PnL to be zero based on the expected quantity. Calculated as "abs(pnlRealized) / quantity.expected" if "quantity.expected" is defined in the configuration and not zero and "pnlRealized" is not positive; otherwise, it is set to zero.
-
-- **quantity**: 
-  - **computed**: Updated by summing "amountReceived" and subtracting "amountSent" and "fees" for each transaction.
-  - **expected**: Taken from "expectedQuantities.ts".
-  - **delta**: Calculated as "computed - expected".
-  - **deltaPercent**: Calculated as "(delta / expected) * 100" if "expected" is defined.
-
-- **cashInDelta**: The change in "cashIn" compared to the previous entry in the token's historic data.
-
-- **cashOutDelta**: The change in "cashOut" compared to the previous entry in the token's historic data.
-
-- **totalBuyDelta**: The change in "totalBuy" compared to the previous entry in the token's historic data.
-
-- **totalSellDelta**: The change in "totalSell" compared to the previous entry in the token's historic data.
-
-## Valuation Calculation Details
-
-- **computed**: The computed valuation of a token or scenario. Calculated by taking the current market price of the token (within the scenario) and multiplying it by the quantity of the token held. For scenarios, it is the sum of computed valuations for all tokens within the scenario.
-
-- **expected**: The expected valuation of a token or scenario. This value is predefined in the configuration or derived from expected quantities and current market prices (within the scenario). For scenarios, it is the sum of expected valuations for all tokens within the scenario.
-
-- **totalComputed**: The aggregated computed valuation across all tokens in a scenario. Calculated by summing up the "computed" valuations for each token within the scenario.
-
-- **totalExpected**: The aggregated expected valuation across all tokens in a scenario. Calculated by summing up the "expected" valuations for each token within the scenario. If the expected value is not defined for a token, it is excluded from this total.
-
-- **scenarioName**: The name of the scenario used for valuation. This is a descriptive identifier provided in the configuration.
-
-- **scenarioDescription**: A brief description of the scenario, outlining the assumptions or conditions under which the valuation is performed. This helps contextualize the computed and expected values.
-
-- **tokenValuations**: A detailed record of valuations for each token under a specific scenario. Each entry includes the "computed" and "expected" values for a token, as described above.
-
-- **totalComputed**: For the overall valuation, this represents the sum of all computed valuations across all scenarios. It gives a comprehensive view of the wallet's value under various conditions.
-
-- **totalExpected**: For the overall valuation, this represents the sum of all expected valuations across all scenarios. It provides a benchmark or target value for the wallet under various conditions.
-
-
-## ChatGPT Assistance
-
-The code in this project was developed with the assistance of ChatGPT, an AI language model created by OpenAI. ChatGPT provided code suggestions, refactoring tips, and explanations throughout the development process. This collaboration helped to ensure the code's correctness and efficiency while also providing insights into potential improvements and best practices.
-
-The methodology for calculating each property, managing historical data, and structuring the codebase was informed by the suggestions provided by ChatGPT. While the final implementation and decisions were made by the developer, the AI's contributions played a significant role in shaping the project.
-
-## Conclusion
-
-This project offers a robust tool for parsing and summarizing token transactions, especially for those using the Waltio platform. By using TypeScript, the project ensures type safety and clarity in the codebase, making it easier to maintain and extend. Whether you're tracking individual token investments or grouping tokens together for a broader analysis, this tool provides detailed insights into your cryptocurrency portfolio's performance.
-
-Feel free to contribute to this project by submitting issues or pull requests on the GitHub repository. Your feedback and improvements are welcome!
-
-Happy coding!
+Metrics are computed and saved considering the `raw` transactions (transactions that do not consider aliases) and the `aliased` transactions (transactions that consider aliases).
+
+## Data Consideration
+
+Here are some explanations concerning computed properties to avoid misunderstanding.
+
+### Metric
+
+- `counter`: The total number of transactions involving the token (received, sent, or used to pay fees)
+- `fees`: The total volume of fees (in fiat) paid using the token.
+- `quantity`: The final quantity of the token in the wallet.
+- `pnlRealized`: The difference between the `sell` volume and the `buy` volume.
+- `pnlRealizedStablecoin`: The difference between the `stablecoinOut` volume and the `stablecoinIn` volume.
+- `pnlRealizedCash`: The difference between the `cashOut` volume and the `cashIn` volume.
+- `breakevenPrice`: The price at which the realized profit/loss (`pnlRealized`) equals zero, representing a neutral financial position / no financial gain or loss (neutral price).
+- `receive`: The token was received.
+- `send`: The token was sent.
+- `buy`: The token was purchased.
+- `sell`: The token was sold.
+- `stablecoinIn`: The token was purchased using a stablecoin.
+- `stablecoinOut`: The token was sold in exchange for a stablecoin.
+- `cashIn`: The token was purchased using fiat currency.
+- `cashOut`: The token was sold in exchange for fiat currency.
+
+### Metric Section
+
+- `counter`: The number of transactions.
+- `volume`: The total volume in fiat.
+- `quantity`: The total quantity.
+- `weightedAveragePrice`: The average price, weighted by the quantity of each transaction. It reflects the effective price considering transaction volumes.
+- `averagePrice`: The simple average price, calculated by dividing the total price of all transactions by the number of transactions.
+
+### Volume
+
+- `counter`: The total number of transactions.
+- `fees`: The total volume of fees (in fiat) paid across all transactions.
+- `pnlRealized`: The overall difference between `sell` volumes and `buy` volumes for all assets.
+- `pnlRealizedStablecoin`: The overall difference between `stablecoinOut` volumes and `stablecoinIn` volumes.
+- `pnlRealizedCash`: The overall difference between `cashOut` volumes and `cashIn` volumes.
+- `receive`: Assets were received.
+- `send`: Assets were sent.
+- `buy`: Assets were purchased.
+- `sell`: Assets were sold.
+- `stablecoinIn`: Assets were purchased using stablecoins.
+- `stablecoinOut`: Assets were sold in exchange for stablecoins.
+- `cashIn`: Assets were purchased using fiat currency.
+- `cashOut`: Assets were sold in exchange for fiat currency.
+
+### Volume Section
+
+- `counter`: The number of transactions.
+- `volume`: The total volume in fiat.
+
+## Improvements
+
+### 1. Handle Multiple Fiat Currencies for Computed Metrics and Volumes
+
+
+Objective
+- The goal of handling multiple fiat currencies is to provide flexibility and precision in the computation of metrics and volumes. By allowing users to define and compute results in various fiat currencies, the program can:
+  - Enhance Usability:
+Support users from different regions or financial contexts by adapting computations to their preferred fiat currency.
+  - Improve Accuracy:
+Ensure that historical transactions are accurately converted using time-specific exchange rates, maintaining consistency and reliability in calculations.
+  - Enable Comparative Analysis:
+Allow users to compare metrics and wallet performance across multiple fiat currencies, providing a broader financial perspective.
+  - Streamline Data Management:
+Organize results efficiently in dedicated folders for each fiat currency, enabling easy access and better traceability of computations.
+- By achieving this, the program ensures that all metrics remain relevant and actionable, regardless of the user's default currency.
+
+Input Requirements:
+- The program must support historical data inputs for the price evolution between the default fiat used in transactions (EURO) and the target fiat currency for computations.
+
+Conversion Process:
+- The first step involves converting all transaction prices from the default fiat (EURO) to the target fiat currency.
+- Once all prices are converted, computations will proceed based on the new fiat values.
+
+Multi-Fiat Computation:
+- Ideally, the program should allow a non-exhaustive list of fiat currencies as input.
+- Metrics and computations will be performed for each specified fiat currency.
+- Results will be saved in organized directories following the structure: /timestamp/fiat/..., where each folder corresponds to a specific fiat currency.
+
+Useful link: https://fr.investing.com/currencies/eur-usd-historical-data
+
+### 2. Track Historical Evolution for Tokens and Wallet
+
+Objective:
+- It would be valuable to compute and track the evolution of key metrics (transaction by transaction) over the entire history of activity. This applies both to individual tokens and the overall wallet.
+
+Per-Token Metrics:
+- For each token, the program should calculate and log metrics such as:
+  - Quantity held over time.
+  - Realized and unrealized profits/losses.
+  - Average and weighted average prices.
+  - Fees and transaction volumes.
+
+Overall Wallet Metrics:
+- Similarly, aggregate metrics for the entire wallet should be tracked, including:
+  - Total portfolio value over time.
+  - Realized and unrealized profits/losses for the wallet as a whole.
+  - Allocation of assets (e.g., percentage of stablecoins, volatile tokens, fiat, etc.).
+
+Historical Perspective:
+- These computations provide a chronological view of how individual token balances and overall wallet performance evolved.
+- Useful for identifying trends, making informed decisions, and improving portfolio management.
+
+
+### 3. Enhancing Usability with a Graphical User Interface (GUI)
+
+Objective:
+- Implementing a GUI would make it significantly easier to visualize and interpret the computed metrics. This would improve the user experience by providing an intuitive way to interact with the data.
+
+Key Benefits:
+- Simplified Analysis:
+Users can view complex metrics and trends through charts, graphs, and tables instead of parsing raw data files.
+- Real-Time Insights:
+Allow real-time or dynamic updates to the visualizations when new computations are performed.
+- Better Understanding:
+Visual representations help identify patterns, trends, and anomalies in wallet performance or individual token behavior.
+- Ease of Comparison:
+Facilitate side-by-side comparisons of metrics for different tokens, fiat currencies, or time periods.
+
+Potential Features:
+- Interactive dashboards with filters (e.g., by token, fiat currency, date range).
+- Graphs for historical evolution of key metrics (e.g., portfolio value, profit/loss, token quantities).
+- Tables summarizing aggregated metrics for the wallet and individual tokens.
+- Export options for reports and visualizations (PDF, CSV, etc.).
