@@ -11,29 +11,13 @@ interface Config {
    */
   fiatTokens: string[];
   /**
+   * Stablecoin tickers (USDT, USDC, etc.).
+   */
+  stablecoinTokens: string[];
+  /**
    * Define token aliases.
    */
   tokenAliases: Record<string, string[]>;
-  /**
-   * A record of expected quantities for specific tokens.
-   * The key is the token symbol and the value is the expected quantity.
-   */
-  expectedQuantities: Record<string, number>;
-  /**
-   * Define the groups and their composition.
-   */
-  groups: Record<string, string[]>;
-  /**
-   * Represents a single pricing scenario with a description
-   * and expected prices for tokens.
-   */
-  scenarios: Record<
-    string,
-    {
-      description: string;
-      prices: Record<string, number>;
-    }
-  >;
 }
 
 const is_test = process.env.NODE_ENV === "test";

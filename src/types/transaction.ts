@@ -2,10 +2,42 @@ import z from "zod";
 
 const REGEX_DATE = new RegExp(/^\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}:\d{2}$/, "g"); // 02/24/2024 12:29:09
 
-export const TransactionFromWaltioZod = z.object({
+export const TransactionZod = z.object({
   type: z.enum(["Échange", "Dépôt", "Retrait"]),
   date: z.string().regex(REGEX_DATE),
-  timeZone: z.string(),
+  timeZone: z.enum([
+    "GMT",
+    "GMT+1:00",
+    "GMT+2:00",
+    "GMT+2:00",
+    "GMT+3:00",
+    "GMT+3:30",
+    "GMT+4:00",
+    "GMT+5:00",
+    "GMT+5:30",
+    "GMT+6:00",
+    "GMT+7:00",
+    "GMT+8:00",
+    "GMT+9:00",
+    "GMT+9:30",
+    "GMT+10:00",
+    "GMT+11:00",
+    "GMT+12:00",
+    "GMT-11:00",
+    "GMT-10:00",
+    "GMT-9:00",
+    "GMT-8:00",
+    "GMT-7:00",
+    "GMT-7:00",
+    "GMT-6:00",
+    "GMT-5:00",
+    "GMT-5:00",
+    "GMT-4:00",
+    "GMT-3:30",
+    "GMT-3:00",
+    "GMT-3:00",
+    "GMT-1:00",
+  ]),
   amountReceived: z.number().optional(),
   tokenReceived: z.string().optional(),
   amountSent: z.number().optional(),
@@ -19,8 +51,8 @@ export const TransactionFromWaltioZod = z.object({
   priceTokenReceived: z.number().optional(),
   priceTokenFees: z.number().optional(),
   address: z.string(),
-  trasactionHash: z.string(),
+  transactionHash: z.string(),
   externalId: z.string(),
 });
 
-export type TransactionFromWaltio = z.infer<typeof TransactionFromWaltioZod>;
+export type Transaction = z.infer<typeof TransactionZod>;
