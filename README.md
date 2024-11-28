@@ -204,7 +204,7 @@ Multi-Fiat Computation:
 - Metrics and computations will be performed for each specified fiat currency.
 - Results will be saved in organized directories following the structure: /timestamp/fiat/..., where each folder corresponds to a specific fiat currency.
 
-Useful link: https://fr.investing.com/currencies/eur-usd-historical-data
+Useful link: https://www.investing.com/currencies/eur-usd-historical-data
 
 ### 2. Track Historical Evolution for Tokens and Wallet
 
