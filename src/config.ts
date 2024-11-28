@@ -7,15 +7,28 @@ interface Config {
    */
   filePath: string;
   /**
-   * Fiat tickers (EUR, USD, etc.).
+   * The fiat currency used as the reference in the Waltio file for calculations (e.g. "EUR").
+   */
+  fiatReference: string;
+  /**
+   * A list of fiat currencies to process for calculations.
+   */
+  fiatsForProcessing: {
+    // The fiat token to process (e.g., "USD", "EUR").
+    token: string;
+    // Path to the file containing the price history for the specified fiat token.
+    priceHistoryFilePath: string;
+  }[];
+  /**
+   * Fiat tickers (e.g., EUR, USD, etc.).
    */
   fiatTokens: string[];
   /**
-   * Stablecoin tickers (USDT, USDC, etc.).
+   * Stablecoin tickers (e.g., USDT, USDC, etc.).
    */
   stablecoinTokens: string[];
   /**
-   * Define token aliases.
+   * Define token aliases, allowing for mapping of tokens to their alternate names.
    */
   tokenAliases: Record<string, string[]>;
 }

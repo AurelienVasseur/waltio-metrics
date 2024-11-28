@@ -7,8 +7,19 @@ import TransactionsService from "./services/transactions.service";
 import { cleanOutput, generateUniqueTimestamp, save } from "./utils/json.util";
 import { Transaction } from "./types/transaction";
 import capitalize from "./utils/capitalize.util";
+import FiatService from "./services/fiat.service";
 
 const main = async () => {
+  console.log("Hello world")
+
+  const test = await FiatService.getPriceHistory("USD");
+  console.log('Test: ', test)
+
+  return
+
+
+
+
   const ora = (await import("ora")).default;
 
   // Prepare output directories
