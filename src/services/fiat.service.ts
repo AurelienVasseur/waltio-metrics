@@ -1,5 +1,6 @@
 import { config } from "../config";
 import { PriceHistory, PriceHistoryZod } from "../types/priceHistory";
+import { Transaction } from "../types/transaction";
 import { parseCSV } from "../utils/csv.util";
 
 export default class FiatService {
@@ -78,5 +79,40 @@ export default class FiatService {
     throw new Error(
       `No price found for the date ${date.toISOString()} within a ±7 days interval.`
     );
+  }
+
+  /**
+   * Converts the prices of transactions based on historical price data.
+   *
+   * This method iterates through a list of transactions, finds the price
+   * for the transaction date from the provided price history, and adjusts
+   * the price-related fields (`priceTokenFees`, `priceTokenReceived`, `priceTokenSent`)
+   * by multiplying them with the corresponding price.
+   *
+   * @param transactions - The list of transactions to be converted. Each transaction includes a `date` and price-related fields.
+   * @param priceHistory - The historical price data used for conversion. This should include a list of dates and their corresponding prices.
+   * @returns An array of transactions with updated price fields, where applicable.
+   *
+   * @throws An error if a price for a transaction's date is not found within the price history.
+   */
+  static convertPrices(
+    transactions: Transaction[],
+    priceHistory: PriceHistory[]
+  ): Transaction[] {
+    return transactions.map((t) => {
+      let convertedT = { ...t };
+      const date = new Date(t.date);
+      const price = this.getPriceForDate(priceHistory, date);
+      convertedT.priceTokenFees = t.priceTokenFees
+        ? t.priceTokenFees * price
+        : undefined;
+      convertedT.priceTokenReceived = t.priceTokenReceived
+        ? t.priceTokenReceived * price
+        : undefined;
+      convertedT.priceTokenSent = t.priceTokenSent
+        ? t.priceTokenSent * price
+        : undefined;
+      return convertedT;
+    });
   }
 }
