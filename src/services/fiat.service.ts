@@ -2,6 +2,7 @@ import { config } from "../config";
 import { PriceHistory, PriceHistoryZod } from "../types/priceHistory";
 import { Transaction } from "../types/transaction";
 import { parseCSV } from "../utils/csv.util";
+import { parse as parseDate } from "date-fns";
 
 export default class FiatService {
   /**
@@ -101,7 +102,7 @@ export default class FiatService {
   ): Transaction[] {
     return transactions.map((t) => {
       let convertedT = { ...t };
-      const date = new Date(t.date);
+      const date = parseDate(t.date, "dd/MM/yyyy HH:mm:ss", new Date());
       const price = this.getPriceForDate(priceHistory, date);
       convertedT.priceTokenFees = t.priceTokenFees
         ? t.priceTokenFees * price

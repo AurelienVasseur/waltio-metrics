@@ -108,7 +108,7 @@ describe("Fiat Service", () => {
     const transactions: Transaction[] = [
       {
         type: "Échange",
-        date: "11/25/2024 12:29:09",
+        date: "25/11/2024 12:29:09",
         timeZone: "GMT",
         amountReceived: 10,
         tokenReceived: "BTC",
@@ -128,7 +128,7 @@ describe("Fiat Service", () => {
       },
       {
         type: "Dépôt",
-        date: "11/26/2024 14:30:00",
+        date: "26/11/2024 14:30:00",
         timeZone: "GMT+1:00",
         amountReceived: 15,
         tokenReceived: "ETH",
@@ -167,7 +167,7 @@ describe("Fiat Service", () => {
       const transactionsWithMissingFields: Transaction[] = [
         {
           type: "Retrait",
-          date: "11/28/2024 09:15:00",
+          date: "28/11/2024 09:15:00",
           timeZone: "GMT",
           platform: "Kraken",
           description: "Transaction without optional fields",
@@ -197,7 +197,7 @@ describe("Fiat Service", () => {
       const transactionsWithNoPriceMatch: Transaction[] = [
         {
           type: "Échange",
-          date: "10/20/2024 12:29:09",
+          date: "20/10/2024 12:29:09",
           timeZone: "GMT",
           amountReceived: 10,
           tokenReceived: "BTC",
