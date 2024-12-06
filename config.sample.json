@@ -1,5 +1,9 @@
 {
   "filePath": "data/export_waltio.xlsx",
+  "fiatReference": "EUR",
+  "fiatsForProcessing": [
+    { "token": "USD", "priceHistoryFilePath": "input/EUR_USD.csv" }
+  ],
   "fiatTokens": ["USD", "EUR"],
   "stablecoinTokens": ["USDT", "USDC"],
   "tokenAliases": {

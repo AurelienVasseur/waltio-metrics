@@ -1,5 +1,12 @@
 {
-  "filePath": "tests/export_waltio_test.xlsx",
+  "filePath": "tests/files/export_waltio_test.xlsx",
+  "fiatReference": "EUR",
+  "fiatsForProcessing": [
+    { "token": "USD", "priceHistoryFilePath": "tests/files/EUR_USD.csv" },
+    { "token": "JPY", "priceHistoryFilePath": "tests/files/EUR_JPY.csv" },
+    { "token": "PLN", "priceHistoryFilePath": "tests/files/EUR_PLN.csv" },
+    { "token": "CAD", "priceHistoryFilePath": "tests/files/FILE_THAT_DOESNT_EXIST.csv" }
+  ],
   "fiatTokens": ["USD", "EUR"],
   "stablecoinTokens": ["USDT", "USDC"],
   "tokenAliases": {
