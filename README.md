@@ -2,8 +2,7 @@
 
 This project provides a function to parse and summarize token transactions, specifically designed to handle transactions from Waltio. The main functionality is implemented in TypeScript, and it calculates various properties for each token involved in the transactions, including quantities, cash flows, and realized profit and loss (PnL).
 
-> **Note**: The prices defined in the transactions exported from Waltio are in **euros**.  
-> Therefore, all metrics calculated by this program (e.g., volumes, prices, etc.) are also in **euros**.
+> **Note**: The prices defined in the transactions exported from Waltio are in **euros**. Therefore, all metrics calculated by this program (e.g., volumes, prices, etc.) are also in **euros**, unless multiple fiat computations are enabled (see [Multi-Fiat Computation](#fiats-for-processing-multi-fiat-computation)).
 
 The implementation of this project prioritizes maintainability and ease of understanding over performance optimization, ensuring the code remains accessible and straightforward for future development and maintenance.
 
@@ -70,6 +69,84 @@ Path of the file (exported from Waltio) that must be used to load transactions a
   ...
 }
 ```
+
+### Fiat Reference
+
+The reference fiat used in the raw transactions (input data) to define prices:
+
+```json
+{
+  ...
+  "fiatReference": "EUR",
+  ...
+}
+```
+
+### Fiats For Processing Multi-Fiat Computation
+
+With the implementation of multi-fiat computations, the program supports the calculation of metrics and volumes for multiple fiat currencies. By default, the transactions are processed in euros (see Fiat Reference), but you can configure additional fiat currencies for which metrics should be computed.
+
+In your `config.json`, you can define the fiat currencies to compute metrics for using the `fiatsForProcessing` property. Each entry specifies the fiat token and the path to the historical price data file for that fiat currency:
+
+```json
+{
+  ...
+  "fiatsForProcessing": [
+    {
+      "token": "USD",
+      "priceHistoryFilePath": "data/eur_to_usd_prices.csv"
+    },
+    {
+      "token": "GBP",
+      "priceHistoryFilePath": "data/eur_to_gbp_prices.csv"
+    }
+  ],
+  ...
+}
+```
+
+Historical price data can be obtained (in `CSV`) from `investing.com`. For example, you can retrieve the historical prices for `EUR/USD` at the following link: [EUR/USD Historical Data](https://www.investing.com/currencies/eur-usd-historical-data).
+
+Historical price data must be provided as input to this program in `CSV` files. These files must not contain commas within values or double commas. Additionally, they must adhere strictly to the following structure (columns). Below is an example of a valid price history file:
+
+```csv
+Date,Price,Open,High,Low,Vol.,Change %
+11/28/2024,1.0546,1.0562,1.0563,1.0527,,-0.18%
+11/27/2024,1.0564,1.0487,1.0587,1.0472,,0.74%
+11/26/2024,1.0486,1.0493,1.0544,1.0424,,-0.08%
+11/25/2024,1.0494,1.0426,1.0530,1.0426,,0.74%
+```
+
+#### Workflow
+
+1. Historical Prices:
+
+   The program requires historical exchange rate data between EUR and the target fiat currencies (e.g., USD, GBP). These files should be placed in the data directory and their paths defined in the configuration.
+
+2. Conversion:
+
+   All transaction prices are first converted from EUR (the default fiat) to the target fiat currencies using the historical rates.
+
+3. Computations:
+
+   Metrics and volumes are computed independently for each target fiat currency based on the converted prices.
+
+4. Output:
+
+   The results are saved in dedicated subdirectories under output/ for each computed fiat currency. The folder structure follows this pattern:
+
+   ```js
+   output/<timestamp>/<fiat>/...
+   ```
+
+   For example:
+
+   ```js
+   output/2024-12-06/USD/...
+   output/2024-12-06/GBP/...
+   ```
+
+   If your configuration specifies USD and GBP as target currencies, the program will create two separate folders (USD and GBP) inside the output directory. Each folder will contain the computed metrics in the specified fiat.
 
 ### Fiat Tokens
 
@@ -177,41 +254,18 @@ Here are some explanations concerning computed properties to avoid misunderstand
 
 ## Improvements
 
-### 1. Handle Multiple Fiat Currencies for Computed Metrics and Volumes
+### 1. Use the NodeJS Date Object in Transactions
 
-
-Objective
-- The goal of handling multiple fiat currencies is to provide flexibility and precision in the computation of metrics and volumes. By allowing users to define and compute results in various fiat currencies, the program can:
-  - Enhance Usability:
-Support users from different regions or financial contexts by adapting computations to their preferred fiat currency.
-  - Improve Accuracy:
-Ensure that historical transactions are accurately converted using time-specific exchange rates, maintaining consistency and reliability in calculations.
-  - Enable Comparative Analysis:
-Allow users to compare metrics and wallet performance across multiple fiat currencies, providing a broader financial perspective.
-  - Streamline Data Management:
-Organize results efficiently in dedicated folders for each fiat currency, enabling easy access and better traceability of computations.
-- By achieving this, the program ensures that all metrics remain relevant and actionable, regardless of the user's default currency.
-
-Input Requirements:
-- The program must support historical data inputs for the price evolution between the default fiat used in transactions (EURO) and the target fiat currency for computations.
-
-Conversion Process:
-- The first step involves converting all transaction prices from the default fiat (EURO) to the target fiat currency.
-- Once all prices are converted, computations will proceed based on the new fiat values.
-
-Multi-Fiat Computation:
-- Ideally, the program should allow a non-exhaustive list of fiat currencies as input.
-- Metrics and computations will be performed for each specified fiat currency.
-- Results will be saved in organized directories following the structure: /timestamp/fiat/..., where each folder corresponds to a specific fiat currency.
-
-Useful link: https://www.investing.com/currencies/eur-usd-historical-data
+Replace the string representation of dates in the `Transaction` type with the `Date` object for more accurate and efficient date handling.
 
 ### 2. Track Historical Evolution for Tokens and Wallet
 
 Objective:
+
 - It would be valuable to compute and track the evolution of key metrics (transaction by transaction) over the entire history of activity. This applies both to individual tokens and the overall wallet.
 
 Per-Token Metrics:
+
 - For each token, the program should calculate and log metrics such as:
   - Quantity held over time.
   - Realized and unrealized profits/losses.
@@ -219,33 +273,41 @@ Per-Token Metrics:
   - Fees and transaction volumes.
 
 Overall Wallet Metrics:
+
 - Similarly, aggregate metrics for the entire wallet should be tracked, including:
   - Total portfolio value over time.
   - Realized and unrealized profits/losses for the wallet as a whole.
   - Allocation of assets (e.g., percentage of stablecoins, volatile tokens, fiat, etc.).
 
 Historical Perspective:
+
 - These computations provide a chronological view of how individual token balances and overall wallet performance evolved.
 - Useful for identifying trends, making informed decisions, and improving portfolio management.
-
 
 ### 3. Enhancing Usability with a Graphical User Interface (GUI)
 
 Objective:
+
 - Implementing a GUI would make it significantly easier to visualize and interpret the computed metrics. This would improve the user experience by providing an intuitive way to interact with the data.
 
 Key Benefits:
+
 - Simplified Analysis:
-Users can view complex metrics and trends through charts, graphs, and tables instead of parsing raw data files.
+  Users can view complex metrics and trends through charts, graphs, and tables instead of parsing raw data files.
 - Real-Time Insights:
-Allow real-time or dynamic updates to the visualizations when new computations are performed.
+  Allow real-time or dynamic updates to the visualizations when new computations are performed.
 - Better Understanding:
-Visual representations help identify patterns, trends, and anomalies in wallet performance or individual token behavior.
+  Visual representations help identify patterns, trends, and anomalies in wallet performance or individual token behavior.
 - Ease of Comparison:
-Facilitate side-by-side comparisons of metrics for different tokens, fiat currencies, or time periods.
+  Facilitate side-by-side comparisons of metrics for different tokens, fiat currencies, or time periods.
 
 Potential Features:
+
 - Interactive dashboards with filters (e.g., by token, fiat currency, date range).
 - Graphs for historical evolution of key metrics (e.g., portfolio value, profit/loss, token quantities).
 - Tables summarizing aggregated metrics for the wallet and individual tokens.
 - Export options for reports and visualizations (PDF, CSV, etc.).
+
+### 4. Compute Metrics for a Specific Time Period
+
+Enable the computation of metrics for a specific time period, such as one year, a single crypto market cycle, etc. This feature will provide greater flexibility for analyzing and evaluating investment performance.
